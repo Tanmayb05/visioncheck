@@ -5,12 +5,15 @@ export function AppShell({ children }) {
     <div style={{
       maxWidth: 480,
       margin: '0 auto',
+      height: '100dvh',
       minHeight: '100dvh',
       background: '#fff',
       display: 'flex',
       flexDirection: 'column',
       position: 'relative',
       overflowX: 'hidden',
+      overflowY: 'auto',
+      WebkitOverflowScrolling: 'touch',
     }}>
       {children}
     </div>

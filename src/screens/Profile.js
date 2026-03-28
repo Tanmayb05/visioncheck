@@ -27,7 +27,7 @@ export default function Profile({ profile, setProfile, onNext, onBack }) {
         onBack={onBack}
       />
 
-      <div style={{ padding: '20px', flex: 1, display: 'flex', flexDirection: 'column', gap: 22, overflowY: 'auto' }}>
+      <div style={{ padding: '20px', flex: 1, display: 'flex', flexDirection: 'column', gap: 22 }}>
         {/* Who is being tested */}
         <div>
           <div style={{ fontWeight: 600, fontSize: 13, marginBottom: 10, color: '#4a5568', textTransform: 'uppercase', letterSpacing: 0.5 }}>
@@ -110,12 +110,19 @@ export default function Profile({ profile, setProfile, onNext, onBack }) {
           </div>
         </div>
 
-        <div style={{ marginTop: 'auto', paddingTop: 8 }}>
-          <BigButton onClick={onNext} disabled={!isValid}>
-            Begin Eye Tests
-          </BigButton>
-          <Disclaimer />
-        </div>
+      </div>
+
+      <div style={{
+        padding: '12px 20px',
+        paddingBottom: 'calc(12px + env(safe-area-inset-bottom, 0px))',
+        borderTop: '1px solid #e2e8f0',
+        background: '#fff',
+        flexShrink: 0,
+      }}>
+        <BigButton onClick={onNext} disabled={!isValid}>
+          Begin Eye Tests
+        </BigButton>
+        <Disclaimer />
       </div>
     </AppShell>
   );

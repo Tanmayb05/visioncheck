@@ -48,7 +48,16 @@ export default function Welcome({ onStart, language, setLanguage }) {
         </div>
       </div>
 
-      <div style={{ padding: '20px', flex: 1, display: 'flex', flexDirection: 'column', gap: 18 }}>
+      <div style={{
+        padding: '20px',
+        flex: 1,
+        minHeight: 0,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 18,
+        overflowY: 'auto',
+        WebkitOverflowScrolling: 'touch',
+      }}>
 
         {/* Language selection */}
         <div>
@@ -184,12 +193,20 @@ export default function Welcome({ onStart, language, setLanguage }) {
           </div>
         </div>
 
-        <div style={{ marginTop: 'auto', paddingTop: 8 }}>
-          <BigButton onClick={onStart}>
-            Begin Assessment
-          </BigButton>
-          <Disclaimer />
-        </div>
+      </div>
+
+      {/* Footer button — outside scroll area so it's always visible */}
+      <div style={{
+        padding: '12px 20px',
+        paddingBottom: 'calc(12px + env(safe-area-inset-bottom, 0px))',
+        borderTop: '1px solid #e2e8f0',
+        background: '#fff',
+        flexShrink: 0,
+      }}>
+        <BigButton onClick={onStart}>
+          Begin Assessment
+        </BigButton>
+        <Disclaimer />
       </div>
     </AppShell>
   );
