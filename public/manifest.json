@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "VisionCheck",
+  "name": "VisionCheck — Free Eye Screening",
   "icons": [
     {
       "src": "favicon.ico",
@@ -20,6 +20,8 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "orientation": "portrait",
+  "theme_color": "#1a6b3c",
+  "background_color": "#f8f9fa",
+  "description": "Free eye screening — visual acuity, color vision, astigmatism, contrast, near vision, macular health and more."
 }
