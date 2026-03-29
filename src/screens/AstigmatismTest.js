@@ -99,7 +99,21 @@ export default function AstigmatismTest({ onComplete, onBack, step, totalSteps }
           textAlign: 'center',
           width: '100%',
         }}>
-          👁️ Focus on the <strong>green center dot</strong>. Tap any lines that look darker, blurrier, or different from the rest.
+          👁️ Focus on the <strong>center dot</strong>. Tap any lines that look darker, blurrier, or different from the rest.
+        </div>
+
+        <div style={{
+          background: '#fffbeb',
+          border: '1.5px solid #fcd34d',
+          borderRadius: 12,
+          padding: '10px 16px',
+          marginBottom: 16,
+          fontSize: 12,
+          color: '#92400e',
+          textAlign: 'center',
+          width: '100%',
+        }}>
+          Tip: The lines are thin — tap <strong>directly on the line</strong> itself, not near it, for accurate selection.
         </div>
 
         <div style={{ marginBottom: 20, width: '100%', display: 'flex', justifyContent: 'center' }}>

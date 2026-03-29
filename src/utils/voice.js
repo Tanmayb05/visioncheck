@@ -35,8 +35,8 @@ export const VOICE_SCRIPTS = {
   en: {
     welcome: 'Welcome to VisionCheck. This app will test your eyes. It takes about 10 minutes. Hold the phone at arm\'s length.',
     profile: 'First, tell us a little about yourself.',
-    acuity: 'Cover your left eye. Look at the letter on screen. Which direction is it pointing? Swipe or tap the arrow.',
-    acuity_left: 'Now cover your right eye. Which direction is the letter pointing?',
+    acuity: 'Cover your left eye. Hold the phone at arm\'s length. Look at the letter on screen. Which direction does the open side or lines of the E face? Swipe or tap the arrow.',
+    acuity_left: 'Now cover your right eye. Keep the phone at the same distance. Which direction do the open side or lines of the E face?',
     color: 'What number do you see in the circle of dots? Tap the number, or tap the X if you cannot see one.',
     astigmatism: 'Look at the center dot. Do all the lines around it look the same? Tap any lines that look different.',
     contrast: 'Can you see the letter C? Which way is the opening pointing?',
@@ -50,7 +50,7 @@ export const VOICE_SCRIPTS = {
   fr: {
     welcome: 'Bienvenue sur VisionCheck. Cette application va tester vos yeux. Cela prend environ 10 minutes.',
     profile: 'D\'abord, parlez-nous un peu de vous.',
-    acuity: 'Couvrez votre œil gauche. Regardez la lettre à l\'écran. Dans quelle direction pointe-t-elle?',
+    acuity: 'Couvrez votre œil gauche. Tenez le téléphone à bout de bras. Regardez la lettre à l\'écran. Dans quelle direction le côté ouvert ou les branches du E sont-ils orientés?',
     color: 'Quel nombre voyez-vous dans le cercle de points?',
     astigmatism: 'Regardez le point central. Toutes les lignes semblent-elles identiques?',
     contrast: 'Pouvez-vous voir la lettre C? De quel côté est l\'ouverture?',

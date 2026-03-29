@@ -7,24 +7,12 @@ import { speak } from '../utils/voice';
 const LINES = [200, 100, 70, 50, 40, 30, 25, 20, 15];
 const DIRECTIONS = ['up', 'down', 'left', 'right'];
 
-// Plain-English context for each VA level
-const VA_CONTEXT = {
-  200: 'Legal blindness threshold — can see at 20 ft what normal vision sees at 200 ft',
-  100: 'Severe impairment — large signs only',
-  70:  'Significant blur — large print only',
-  50:  'Moderate blur — standard print is difficult',
-  40:  'Borderline — DMV limit in many regions',
-  30:  'Mildly reduced vision',
-  25:  'Near-normal vision',
-  20:  'Normal (20/20)',
-  15:  'Better than average vision',
-};
-
 // Size in vw for each line (decreasing)
 const SIZES = [22, 18, 15, 12, 10, 8, 6.5, 5.5, 4.5];
 
 function TumblingE({ direction, size }) {
-  const rotations = { up: 0, right: 90, down: 180, left: 270 };
+  // E faces right at 0°; rotate so the open side (lines) point in the given direction
+  const rotations = { right: 0, down: 90, left: 180, up: 270 };
   return (
     <div className="tumbling-e" style={{
       fontSize: `min(${size}vw, calc(var(--app-shell-max-width, 480px) * ${size / 100}))`,
@@ -59,8 +47,8 @@ export default function AcuityTest({ onComplete, onBack, step, totalSteps }) {
   useEffect(() => {
     setDirection(randomDir());
     const msg = phase === 'right'
-      ? 'Cover your LEFT eye. Look at the E and swipe which direction it points.'
-      : 'Now cover your RIGHT eye. Which direction does the E point?';
+      ? 'Cover your LEFT eye. Hold the phone at arm\'s length. Look at the E and answer which way the open side or lines of the E face.'
+      : 'Now cover your RIGHT eye. Keep the phone at the same distance. Answer which way the open side or lines of the E face.';
     speak(msg);
   }, [phase, randomDir]);
 
@@ -130,7 +118,6 @@ export default function AcuityTest({ onComplete, onBack, step, totalSteps }) {
   const size = SIZES[Math.min(lineIdx, SIZES.length - 1)];
   const vaLine = LINES[lineIdx];
   const vaLabel = `20/${vaLine}`;
-  const vaContext = VA_CONTEXT[vaLine];
   const directionButtonSize = viewport.isSmallPhone ? 64 : viewport.isTablet ? 88 : viewport.isDesktop ? 96 : 72;
 
   return (
@@ -153,7 +140,7 @@ export default function AcuityTest({ onComplete, onBack, step, totalSteps }) {
           marginBottom: '0.75rem',
           textAlign: 'center',
         }}>
-          Swipe the direction the E is pointing, or tap an arrow below
+          Hold the phone at arm&apos;s length. Swipe the direction the open side of the E faces, or tap an arrow below.
         </div>
 
         {/* E display area */}
@@ -219,18 +206,6 @@ export default function AcuityTest({ onComplete, onBack, step, totalSteps }) {
         }}>
           Line {lineIdx + 1} of {LINES.length} · {vaLabel}
         </div>
-        {vaContext && (
-          <div style={{
-            marginTop: 6,
-            textAlign: 'center',
-            fontSize: '0.6875rem',
-            color: '#9ca3af',
-            fontStyle: 'italic',
-            paddingBottom: 4,
-          }}>
-            {vaContext}
-          </div>
-        )}
       </div>
     </AppShell>
   );

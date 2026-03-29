@@ -59,6 +59,36 @@ function UrgencyBanner({ urgency }) {
   );
 }
 
+const ACUITY_DESCRIPTIONS = {
+  '20/200': { short: 'Very poor', plain: 'You can see at 20 feet what a person with normal vision sees at 200 feet. This is the legal threshold for blindness in many countries.' },
+  '20/100': { short: 'Poor', plain: 'You can see at 20 feet what a normal-vision person sees at 100 feet. Significant difficulty with daily tasks.' },
+  '20/70': { short: 'Low vision', plain: 'You can see at 20 feet what a normal-vision person sees at 70 feet. Reading and driving are likely difficult.' },
+  '20/50': { short: 'Below normal', plain: 'You can see at 20 feet what a normal-vision person sees at 50 feet. Fine detail (e.g. small print) is hard to see.' },
+  '20/40': { short: 'Mildly reduced', plain: 'You can see at 20 feet what a normal-vision person sees at 40 feet. Many countries require at least 20/40 to drive without correction.' },
+  '20/30': { short: 'Near normal', plain: 'You can see at 20 feet what a normal-vision person sees at 30 feet. Slightly below perfect but functional for most tasks.' },
+  '20/25': { short: 'Good', plain: 'Very close to perfect vision. Most people with this score need no correction for everyday tasks.' },
+  '20/20': { short: 'Normal', plain: 'Normal vision. You can see clearly at 20 feet — the standard benchmark for healthy eyesight.' },
+  '20/15': { short: 'Better than normal', plain: 'Sharper than average. You can see at 20 feet what most people can only see at 15 feet.' },
+};
+
+function AcuityExplanation({ va, label }) {
+  const info = va ? ACUITY_DESCRIPTIONS[va] : null;
+  if (!info) return null;
+  return (
+    <div style={{
+      marginTop: 6,
+      background: '#f7fafc',
+      borderRadius: 4,
+      padding: '8px 10px',
+      fontSize: 12,
+      color: '#4a5568',
+      lineHeight: 1.5,
+    }}>
+      <span style={{ fontWeight: 600, color: '#2d3748' }}>{label} ({va}) — {info.short}:</span> {info.plain}
+    </div>
+  );
+}
+
 function TestCard({ id, score }) {
   const [expanded, setExpanded] = useState(false);
   const meta = TEST_LABELS[id];
@@ -99,6 +129,8 @@ function TestCard({ id, score }) {
             <div>
               <div>Right eye: <strong>{score.right?.va || '—'}</strong></div>
               <div>Left eye: <strong>{score.left?.va || '—'}</strong></div>
+              <AcuityExplanation va={score.right?.va} label="Right eye" />
+              <AcuityExplanation va={score.left?.va} label="Left eye" />
               {score.status !== 'pass' && <div style={{ color: '#c05621', marginTop: 6 }}>Visual acuity below 20/40. Corrective lenses may be indicated.</div>}
             </div>
           )}

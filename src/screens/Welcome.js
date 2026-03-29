@@ -5,12 +5,8 @@ import { speak } from '../utils/voice';
 const LANGUAGES = [
   { code: 'en', label: 'English', flag: '🇬🇧', native: 'English' },
   { code: 'fr', label: 'French', flag: '🇫🇷', native: 'Français' },
-  { code: 'es', label: 'Spanish', flag: '🇪🇸', native: 'Español' },
-  { code: 'hi', label: 'Hindi', flag: '🇮🇳', native: 'हिन्दी' },
   { code: 'ar', label: 'Arabic', flag: '🇸🇦', native: 'العربية' },
-  { code: 'pt', label: 'Portuguese', flag: '🇧🇷', native: 'Português' },
   { code: 'sw', label: 'Swahili', flag: '🇰🇪', native: 'Kiswahili' },
-  { code: 'am', label: 'Amharic', flag: '🇪🇹', native: 'አማርኛ' },
 ];
 
 export default function Welcome({ onStart, language, setLanguage }) {
@@ -65,8 +61,11 @@ export default function Welcome({ onStart, language, setLanguage }) {
 
         {/* Language selection */}
         <div>
-          <div style={{ fontWeight: 600, fontSize: 13, marginBottom: 10, color: '#4a5568', textTransform: 'uppercase', letterSpacing: 0.5 }}>
+          <div style={{ fontWeight: 600, fontSize: 13, marginBottom: 4, color: '#4a5568', textTransform: 'uppercase', letterSpacing: 0.5 }}>
             Select Language
+          </div>
+          <div style={{ fontSize: 11, color: '#a0aec0', marginBottom: 10, fontStyle: 'italic' }}>
+            Language only affects the AI summary at the end of the screening. The tests themselves are the same in all languages.
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
             {LANGUAGES.map(lang => (

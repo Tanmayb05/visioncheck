@@ -19,6 +19,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "check:gemini": "node scripts/check-gemini.js",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

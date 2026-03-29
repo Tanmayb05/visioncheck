@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 380" role="img" aria-label="VisionCheck hero eye">
+  <defs>
+    <radialGradient id="eyeCenterGradient" cx="40%" cy="40%" r="70%">
+      <stop offset="0%" stop-color="#2E9B6A" />
+      <stop offset="100%" stop-color="#0D3B28" />
+    </radialGradient>
+  </defs>
+
+  <rect width="380" height="380" fill="none" />
+
+  <circle cx="190" cy="190" r="189.5" fill="none" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="1" />
+  <circle cx="190" cy="190" r="159.5" fill="none" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="1" />
+  <circle cx="190" cy="190" r="129.5" fill="none" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="1" />
+  <circle cx="190" cy="190" r="99.5" fill="none" stroke="#FFFFFF" stroke-opacity="0.12" stroke-width="1" />
+
+  <circle cx="190" cy="190" r="80" fill="url(#eyeCenterGradient)" />
+  <circle cx="190" cy="190" r="30" fill="#0D3B28" />
+  <circle cx="204" cy="202" r="9" fill="#FFFFFF" fill-opacity="0.35" />
+</svg>
