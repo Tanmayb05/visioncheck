@@ -214,7 +214,7 @@ export default function Results({ testData, profile, language, geminiKey, onReta
     const text = lines.join('\n');
 
     if (navigator.share) {
-      navigator.share({ title: 'VisionCheck Results', text });
+      navigator.share({ title: 'OptiVision Results', text });
     } else {
       navigator.clipboard?.writeText(text);
       alert(t('results.resultsCopied'));
