@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { AppShell, Header, DirectionButton, EyeCoverInstruction } from '../components/Layout';
+import { useViewport } from '../hooks/useViewport';
 import { speak } from '../utils/voice';
 
 // Snellen-equivalent lines: index = line number, value = denominator (20/X)
@@ -25,8 +26,8 @@ const SIZES = [22, 18, 15, 12, 10, 8, 6.5, 5.5, 4.5];
 function TumblingE({ direction, size }) {
   const rotations = { up: 0, right: 90, down: 180, left: 270 };
   return (
-    <div style={{
-      fontSize: `${size}vw`,
+    <div className="tumbling-e" style={{
+      fontSize: `min(${size}vw, calc(var(--app-shell-max-width, 480px) * ${size / 100}))`,
       fontWeight: 900,
       fontFamily: 'monospace',
       userSelect: 'none',
@@ -42,6 +43,7 @@ function TumblingE({ direction, size }) {
 }
 
 export default function AcuityTest({ onComplete, onBack, step, totalSteps }) {
+  const viewport = useViewport();
   const [phase, setPhase] = useState('right'); // 'right' | 'left' | 'done'
   const [lineIdx, setLineIdx] = useState(0);
   const [direction, setDirection] = useState('');
@@ -129,6 +131,7 @@ export default function AcuityTest({ onComplete, onBack, step, totalSteps }) {
   const vaLine = LINES[lineIdx];
   const vaLabel = `20/${vaLine}`;
   const vaContext = VA_CONTEXT[vaLine];
+  const directionButtonSize = viewport.isSmallPhone ? 64 : viewport.isTablet ? 88 : viewport.isDesktop ? 96 : 72;
 
   return (
     <AppShell>
@@ -141,13 +144,13 @@ export default function AcuityTest({ onComplete, onBack, step, totalSteps }) {
         totalSteps={totalSteps}
       />
 
-      <div style={{ padding: '16px 20px', flex: 1, display: 'flex', flexDirection: 'column' }}>
+      <div className="acuity-screen" style={{ padding: '1rem var(--shell-padding-x)', flex: 1, display: 'flex', flexDirection: 'column' }}>
         <EyeCoverInstruction eye={phase === 'right' ? 'left' : 'right'} />
 
-        <div style={{
-          fontSize: 13,
+        <div className="acuity-instructions" style={{
+          fontSize: '0.8125rem',
           color: '#6b7280',
-          marginBottom: 12,
+          marginBottom: '0.75rem',
           textAlign: 'center',
         }}>
           Swipe the direction the E is pointing, or tap an arrow below
@@ -157,6 +160,7 @@ export default function AcuityTest({ onComplete, onBack, step, totalSteps }) {
         <div
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
+          className="acuity-display"
           style={{
             flex: 1,
             display: 'flex',
@@ -165,8 +169,8 @@ export default function AcuityTest({ onComplete, onBack, step, totalSteps }) {
             background: '#ffffff',
             border: `3px solid ${feedback === 'correct' ? '#276749' : feedback === 'wrong' ? '#e74c3c' : '#e5e7eb'}`,
             borderRadius: 6,
-            marginBottom: 20,
-            minHeight: 200,
+            marginBottom: '1.25rem',
+            minHeight: viewport.isSmallPhone ? 180 : viewport.isTablet ? 320 : 200,
             transition: 'border-color 0.3s',
             cursor: 'pointer',
             position: 'relative',
@@ -187,20 +191,30 @@ export default function AcuityTest({ onComplete, onBack, step, totalSteps }) {
         </div>
 
         {/* Direction buttons */}
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, marginBottom: 16 }}>
-          <DirectionButton direction="up" onClick={() => handleAnswer('up')} />
-          <div style={{ display: 'flex', gap: 20 }}>
-            <DirectionButton direction="left" onClick={() => handleAnswer('left')} />
-            <div style={{ width: 72, height: 72 }} />
-            <DirectionButton direction="right" onClick={() => handleAnswer('right')} />
+        <div
+          className="acuity-controls"
+          style={{
+            '--direction-button-size': `${directionButtonSize}px`,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '0.625rem',
+            marginBottom: '1rem',
+          }}
+        >
+          <DirectionButton direction="up" onClick={() => handleAnswer('up')} size={directionButtonSize} />
+          <div style={{ display: 'flex', gap: viewport.isSmallPhone ? 16 : 20 }}>
+            <DirectionButton direction="left" onClick={() => handleAnswer('left')} size={directionButtonSize} />
+            <div style={{ width: directionButtonSize, height: directionButtonSize }} />
+            <DirectionButton direction="right" onClick={() => handleAnswer('right')} size={directionButtonSize} />
           </div>
-          <DirectionButton direction="down" onClick={() => handleAnswer('down')} />
+          <DirectionButton direction="down" onClick={() => handleAnswer('down')} size={directionButtonSize} />
         </div>
 
         {/* Progress for this eye */}
         <div style={{
           textAlign: 'center',
-          fontSize: 13,
+          fontSize: '0.8125rem',
           color: '#6b7280',
         }}>
           Line {lineIdx + 1} of {LINES.length} · {vaLabel}
@@ -209,7 +223,7 @@ export default function AcuityTest({ onComplete, onBack, step, totalSteps }) {
           <div style={{
             marginTop: 6,
             textAlign: 'center',
-            fontSize: 11,
+            fontSize: '0.6875rem',
             color: '#9ca3af',
             fontStyle: 'italic',
             paddingBottom: 4,

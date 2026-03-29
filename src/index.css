@@ -20,6 +20,9 @@
   --border: #cbd5e0;
   --radius: 6px;
   --shadow: 0 1px 4px rgba(0,0,0,0.1);
+  --shell-padding-x: 20px;
+  --app-shell-max-width: 480px;
+  --direction-button-size: 72px;
 }
 
 html, body {
@@ -31,10 +34,118 @@ html, body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   overscroll-behavior: none;
+  font-size: clamp(15px, 0.35vw + 14px, 18px);
 }
 
 #root {
   height: 100%;
+}
+
+body {
+  min-height: 100%;
+}
+
+.app-frame {
+  min-height: 100dvh;
+  padding: 0;
+}
+
+.app-shell {
+  width: min(100%, var(--app-shell-max-width));
+  margin: 0 auto;
+  min-height: 100dvh;
+  height: 100dvh;
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.app-header-title {
+  font-size: clamp(1.0625rem, 0.9rem + 0.45vw, 1.35rem);
+}
+
+.app-header-subtitle {
+  font-size: clamp(0.8125rem, 0.72rem + 0.2vw, 0.95rem);
+}
+
+.big-button {
+  font-size: clamp(0.95rem, 0.88rem + 0.18vw, 1.05rem);
+}
+
+.direction-button {
+  min-width: var(--direction-button-size);
+  min-height: var(--direction-button-size);
+}
+
+.acuity-display {
+  width: 100%;
+}
+
+.tumbling-e {
+  max-width: 100%;
+}
+
+@media (max-width: 359px) {
+  :root {
+    --shell-padding-x: 14px;
+  }
+
+  html, body {
+    font-size: 14px;
+  }
+
+  .app-header {
+    padding-top: 0.75rem;
+    padding-bottom: 0.875rem;
+  }
+
+  .eye-cover-instruction {
+    align-items: flex-start;
+  }
+}
+
+@media (min-width: 768px) {
+  :root {
+    --shell-padding-x: 24px;
+    --direction-button-size: 88px;
+  }
+
+  body {
+    background:
+      radial-gradient(circle at top, rgba(43, 108, 176, 0.08), transparent 35%),
+      linear-gradient(180deg, #eef3f8 0%, #f7fafc 100%);
+  }
+
+  .app-frame {
+    padding: 24px;
+  }
+
+  .app-shell {
+    border-radius: 18px;
+    box-shadow: 0 24px 60px rgba(19, 39, 66, 0.12);
+    min-height: calc(100dvh - 48px);
+    height: calc(100dvh - 48px);
+  }
+}
+
+@media (min-width: 1200px) {
+  :root {
+    --shell-padding-x: 32px;
+    --direction-button-size: 96px;
+  }
+
+  .app-frame {
+    padding: 32px;
+  }
+
+  .app-shell {
+    min-height: calc(100dvh - 64px);
+    height: calc(100dvh - 64px);
+  }
 }
 
 button {
