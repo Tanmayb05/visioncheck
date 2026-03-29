@@ -232,6 +232,10 @@ export default function Results({ testData, profile, language, geminiKey, onReta
     window.open(`https://wa.me/?text=${encodeURIComponent(lines)}`);
   };
 
+  const handleFindClinics = () => {
+    window.open('https://www.google.com/maps/search/eye+clinic+near+me', '_blank');
+  };
+
   return (
     <AppShell>
       {/* Header */}
@@ -279,8 +283,32 @@ export default function Results({ testData, profile, language, geminiKey, onReta
           score ? <TestCard key={id} id={id} score={score} /> : null
         )}
 
+        {/* Find Eye Clinics */}
+        <button
+          onClick={handleFindClinics}
+          style={{
+            marginTop: 18,
+            width: '100%',
+            padding: '14px',
+            borderRadius: 6,
+            background: '#276749',
+            color: '#fff',
+            fontSize: 15,
+            fontWeight: 700,
+            border: 'none',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 8,
+            letterSpacing: 0.2,
+          }}
+        >
+          📍 Find Eye Clinics Near You
+        </button>
+
         {/* Share buttons */}
-        <div style={{ marginTop: 18, display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
           <div style={{ fontWeight: 600, fontSize: 13, marginBottom: 4, color: '#4a5568', textTransform: 'uppercase', letterSpacing: 0.5 }}>
             Share Report
           </div>

@@ -23,6 +23,10 @@ export function stop() {
 export const LANG_CODES = {
   en: 'en-US',
   fr: 'fr-FR',
+  es: 'es-ES',
+  hi: 'hi-IN',
+  ar: 'ar-SA',
+  pt: 'pt-BR',
   sw: 'sw-KE',
   am: 'am-ET',
 };

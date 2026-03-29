@@ -13,9 +13,9 @@ const PLATES = [
   { id: 6, normal: 5,  colorBlind: null, type: 'vanishing', description: 'Vanishing - colorblind see nothing' },
 ];
 
-function IshiharaPlate({ plate, size = 280 }) {
-  // Generate pseudo-random dot positions deterministically using plate id as seed
-  const dots = generateDots(plate.id, size);
+function IshiharaPlate({ plate, size = 280, sessionSeed = 1 }) {
+  // Generate pseudo-random dot positions using plate id + session seed
+  const dots = generateDots(plate.id, size, sessionSeed);
   return (
     <svg
       width={size}
@@ -43,8 +43,8 @@ function seededRandom(seed) {
   };
 }
 
-function generateDots(plateId, size) {
-  const rand = seededRandom(plateId * 12345);
+function generateDots(plateId, size, sessionSeed = 1) {
+  const rand = seededRandom(plateId * 12345 + sessionSeed * 7);
   const center = size / 2;
   const radius = size / 2 - 4;
 
@@ -114,11 +114,17 @@ function generateDots(plateId, size) {
   return { bg, num };
 }
 
+// Generate a random session seed once per test session
+function makeSessionSeed() {
+  return Math.floor(Math.random() * 99999) + 1;
+}
+
 export default function ColorTest({ onComplete, onBack, step, totalSteps }) {
   const [plateIdx, setPlateIdx] = useState(0);
   const [answers, setAnswers] = useState([]);
   const [input, setInput] = useState('');
   const [showFeedback, setShowFeedback] = useState(false);
+  const [sessionSeed] = useState(makeSessionSeed);
 
   const plate = PLATES[plateIdx];
 
@@ -174,7 +180,7 @@ export default function ColorTest({ onComplete, onBack, step, totalSteps }) {
           display: 'flex',
           justifyContent: 'center',
         }}>
-          <IshiharaPlate plate={plate} size={Math.min(280, window.innerWidth - 60)} />
+          <IshiharaPlate plate={plate} size={Math.min(280, window.innerWidth - 60)} sessionSeed={sessionSeed} />
         </div>
 
         {/* Number pad */}

@@ -6,6 +6,19 @@ import { speak } from '../utils/voice';
 const LINES = [200, 100, 70, 50, 40, 30, 25, 20, 15];
 const DIRECTIONS = ['up', 'down', 'left', 'right'];
 
+// Plain-English context for each VA level
+const VA_CONTEXT = {
+  200: 'Legal blindness threshold — can see at 20 ft what normal vision sees at 200 ft',
+  100: 'Severe impairment — large signs only',
+  70:  'Significant blur — large print only',
+  50:  'Moderate blur — standard print is difficult',
+  40:  'Borderline — DMV limit in many regions',
+  30:  'Mildly reduced vision',
+  25:  'Near-normal vision',
+  20:  'Normal (20/20)',
+  15:  'Better than average vision',
+};
+
 // Size in vw for each line (decreasing)
 const SIZES = [22, 18, 15, 12, 10, 8, 6.5, 5.5, 4.5];
 
@@ -113,7 +126,9 @@ export default function AcuityTest({ onComplete, onBack, step, totalSteps }) {
   };
 
   const size = SIZES[Math.min(lineIdx, SIZES.length - 1)];
-  const vaLabel = `20/${LINES[lineIdx]}`;
+  const vaLine = LINES[lineIdx];
+  const vaLabel = `20/${vaLine}`;
+  const vaContext = VA_CONTEXT[vaLine];
 
   return (
     <AppShell>
@@ -190,6 +205,18 @@ export default function AcuityTest({ onComplete, onBack, step, totalSteps }) {
         }}>
           Line {lineIdx + 1} of {LINES.length} · {vaLabel}
         </div>
+        {vaContext && (
+          <div style={{
+            marginTop: 6,
+            textAlign: 'center',
+            fontSize: 11,
+            color: '#9ca3af',
+            fontStyle: 'italic',
+            paddingBottom: 4,
+          }}>
+            {vaContext}
+          </div>
+        )}
       </div>
     </AppShell>
   );

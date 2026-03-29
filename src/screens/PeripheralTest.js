@@ -99,6 +99,24 @@ export default function PeripheralTest({ onComplete, onBack, step, totalSteps })
         {phase === 'intro' ? (
           <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: 16 }}>
             <div style={{
+              background: '#eff6ff',
+              border: '1.5px solid #93c5fd',
+              borderRadius: 6,
+              padding: 14,
+              fontSize: 14,
+              color: '#1e40af',
+              marginBottom: 4,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 10,
+            }}>
+              <span style={{ fontSize: 24, flexShrink: 0 }}>📱</span>
+              <div>
+                <div style={{ fontWeight: 700, marginBottom: 2 }}>Hold phone at arm's length</div>
+                <div style={{ fontSize: 12, opacity: 0.85 }}>Keep the screen about 50–60 cm (20–24 inches) away from your face for an accurate test.</div>
+              </div>
+            </div>
+            <div style={{
               background: '#fffbeb',
               border: '1.5px solid #fcd34d',
               borderRadius: 6,
@@ -108,8 +126,8 @@ export default function PeripheralTest({ onComplete, onBack, step, totalSteps })
             }}>
               <div style={{ fontWeight: 700, marginBottom: 8 }}>Instructions:</div>
               <ol style={{ paddingLeft: 20, lineHeight: 1.8 }}>
-                <li>Stare at the <strong>green center dot</strong></li>
-                <li>Keep your eyes focused there — don't look away</li>
+                <li>Hold phone at <strong>arm's length</strong> (~50–60 cm)</li>
+                <li>Stare at the <strong>blue center dot</strong> — don't look away</li>
                 <li>Tap the screen when you see a <strong>red dot appear</strong> anywhere</li>
                 <li>Try to tap it before it disappears</li>
               </ol>

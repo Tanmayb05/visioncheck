@@ -5,6 +5,10 @@ import { speak } from '../utils/voice';
 const LANGUAGES = [
   { code: 'en', label: 'English', flag: '🇬🇧', native: 'English' },
   { code: 'fr', label: 'French', flag: '🇫🇷', native: 'Français' },
+  { code: 'es', label: 'Spanish', flag: '🇪🇸', native: 'Español' },
+  { code: 'hi', label: 'Hindi', flag: '🇮🇳', native: 'हिन्दी' },
+  { code: 'ar', label: 'Arabic', flag: '🇸🇦', native: 'العربية' },
+  { code: 'pt', label: 'Portuguese', flag: '🇧🇷', native: 'Português' },
   { code: 'sw', label: 'Swahili', flag: '🇰🇪', native: 'Kiswahili' },
   { code: 'am', label: 'Amharic', flag: '🇪🇹', native: 'አማርኛ' },
 ];
@@ -150,6 +154,27 @@ export default function Welcome({ onStart, language, setLanguage }) {
               Please increase your screen brightness before proceeding.
             </div>
           )}
+        </div>
+
+        {/* AI summary info */}
+        <div style={{
+          background: '#f0f9ff',
+          border: '1px solid #bae6fd',
+          borderRadius: 6,
+          padding: '12px 14px',
+          fontSize: 12,
+          color: '#0369a1',
+          display: 'flex',
+          gap: 10,
+          alignItems: 'flex-start',
+        }}>
+          <span style={{ fontSize: 18, flexShrink: 0 }}>✨</span>
+          <div>
+            <strong>Powered by Google Gemini AI</strong>
+            <div style={{ marginTop: 3, opacity: 0.85 }}>
+              After your tests, Gemini AI analyses your results and generates a personalised clinical summary in your chosen language.
+            </div>
+          </div>
         </div>
 
         {/* Tests included */}
