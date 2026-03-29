@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { AppShell, BigButton, Disclaimer } from '../components/Layout';
 import { speak } from '../utils/voice';
+import { useTranslation } from '../utils/useTranslation';
 
 const LANGUAGES = [
   { code: 'en', label: 'English', flag: '🇬🇧', native: 'English' },
@@ -11,13 +12,14 @@ const LANGUAGES = [
 
 export default function Welcome({ onStart, language, setLanguage }) {
   const [bright, setBright] = useState(null);
+  const t = useTranslation(language);
 
   useEffect(() => {
-    speak('Welcome to VisionCheck. This app will test your eyes in about 10 minutes.', 'en-US');
-  }, []);
+    speak(t('welcome.voice'), language);
+  }, [language]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <AppShell>
+    <AppShell language={language}>
       {/* Header */}
       <div style={{
         background: '#1e3a5f',
@@ -26,13 +28,13 @@ export default function Welcome({ onStart, language, setLanguage }) {
         borderBottom: '3px solid #2c5282',
       }}>
         <div style={{ fontSize: 11, letterSpacing: 1.5, textTransform: 'uppercase', opacity: 0.6, marginBottom: 8 }}>
-          Eye Health Screening
+          {t('welcome.headerEyeHealth')}
         </div>
         <h1 style={{ fontSize: 26, fontWeight: 700, margin: '0 0 6px', letterSpacing: 0.2 }}>
-          VisionCheck
+          {t('welcome.title')}
         </h1>
         <p style={{ fontSize: 14, opacity: 0.75, maxWidth: 280, margin: 0, lineHeight: 1.5 }}>
-          A structured visual assessment covering 8 screening tests
+          {t('welcome.subtitle')}
         </p>
         <div style={{
           marginTop: 16,
@@ -42,9 +44,9 @@ export default function Welcome({ onStart, language, setLanguage }) {
           fontSize: 12,
           opacity: 0.65,
         }}>
-          <span>Approx. 10 minutes</span>
+          <span>{t('welcome.duration')}</span>
           <span style={{ width: 1, height: 12, background: 'rgba(255,255,255,0.3)' }} />
-          <span>No equipment required</span>
+          <span>{t('welcome.noEquipment')}</span>
         </div>
       </div>
 
@@ -62,10 +64,10 @@ export default function Welcome({ onStart, language, setLanguage }) {
         {/* Language selection */}
         <div>
           <div style={{ fontWeight: 600, fontSize: 13, marginBottom: 4, color: '#4a5568', textTransform: 'uppercase', letterSpacing: 0.5 }}>
-            Select Language
+            {t('welcome.selectLanguage')}
           </div>
           <div style={{ fontSize: 11, color: '#a0aec0', marginBottom: 10, fontStyle: 'italic' }}>
-            Language only affects the AI summary at the end of the screening. The tests themselves are the same in all languages.
+            {t('welcome.languageNote')}
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
             {LANGUAGES.map(lang => (
@@ -105,10 +107,10 @@ export default function Welcome({ onStart, language, setLanguage }) {
           border: '1px solid #cbd5e0',
         }}>
           <div style={{ fontWeight: 600, fontSize: 13, marginBottom: 8, color: '#2d3748' }}>
-            Display Brightness Check
+            {t('welcome.brightnessTitle')}
           </div>
           <div style={{ fontSize: 12, color: '#718096', marginBottom: 10 }}>
-            For accurate results, your screen brightness should be at maximum.
+            {t('welcome.brightnessInstructions')}
           </div>
           <div style={{
             background: '#ffffff',
@@ -122,7 +124,7 @@ export default function Welcome({ onStart, language, setLanguage }) {
             fontSize: 12,
             color: '#a0aec0',
           }}>
-            This area should appear clearly white
+            {t('welcome.brightnessWhite')}
           </div>
           <div style={{ display: 'flex', gap: 8 }}>
             <button
@@ -134,7 +136,7 @@ export default function Welcome({ onStart, language, setLanguage }) {
                 fontWeight: 600, fontSize: 13, cursor: 'pointer', color: '#2d3748',
               }}
             >
-              Adequate
+              {t('welcome.adequate')}
             </button>
             <button
               onClick={() => setBright(false)}
@@ -145,12 +147,12 @@ export default function Welcome({ onStart, language, setLanguage }) {
                 fontWeight: 600, fontSize: 13, cursor: 'pointer', color: '#2d3748',
               }}
             >
-              Too Dim
+              {t('welcome.tooDim')}
             </button>
           </div>
           {bright === false && (
             <div style={{ marginTop: 8, fontSize: 12, color: '#c05621', background: '#fffaf0', padding: '8px 10px', borderRadius: 4, border: '1px solid #fbd38d' }}>
-              Please increase your screen brightness before proceeding.
+              {t('welcome.tooDimWarning')}
             </div>
           )}
         </div>
@@ -169,9 +171,9 @@ export default function Welcome({ onStart, language, setLanguage }) {
         }}>
           <span style={{ fontSize: 18, flexShrink: 0 }}>✨</span>
           <div>
-            <strong>Powered by Google Gemini AI</strong>
+            <strong>{t('welcome.aiTitle')}</strong>
             <div style={{ marginTop: 3, opacity: 0.85 }}>
-              After your tests, Gemini AI analyses your results and generates a personalised clinical summary in your chosen language.
+              {t('welcome.aiDescription')}
             </div>
           </div>
         </div>
@@ -179,19 +181,10 @@ export default function Welcome({ onStart, language, setLanguage }) {
         {/* Tests included */}
         <div>
           <div style={{ fontWeight: 600, fontSize: 13, marginBottom: 10, color: '#4a5568', textTransform: 'uppercase', letterSpacing: 0.5 }}>
-            Tests Included
+            {t('welcome.testsIncluded')}
           </div>
           <div style={{ border: '1px solid #e2e8f0', borderRadius: 6, overflow: 'hidden' }}>
-            {[
-              'Visual Acuity',
-              'Color Vision',
-              'Astigmatism',
-              'Contrast Sensitivity',
-              'Near Vision',
-              'Amsler Grid (Macular)',
-              'Peripheral Vision',
-              'Symptoms Review',
-            ].map((item, i, arr) => (
+            {t('welcome.tests').map((item, i, arr) => (
               <div key={item} style={{
                 padding: '9px 14px',
                 fontSize: 13,
@@ -228,9 +221,9 @@ export default function Welcome({ onStart, language, setLanguage }) {
         flexShrink: 0,
       }}>
         <BigButton onClick={onStart}>
-          Begin Assessment
+          {t('welcome.beginAssessment')}
         </BigButton>
-        <Disclaimer />
+        <Disclaimer language={language} />
       </div>
     </AppShell>
   );

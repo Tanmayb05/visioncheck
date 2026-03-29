@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { AppShell, Header } from '../components/Layout';
 import { speak } from '../utils/voice';
+import { useTranslation } from '../utils/useTranslation';
 
 // Near vision text sizes — progressively smaller
 const TEXT_LEVELS = [
@@ -12,12 +13,13 @@ const TEXT_LEVELS = [
   { size: 9,  label: 'N8',  text: 'This very small text tests whether your eyes can focus at reading distance without strain.' },
 ];
 
-export default function NearVisionTest({ onComplete, onBack, step, totalSteps }) {
+export default function NearVisionTest({ onComplete, onBack, step, totalSteps, language = 'en' }) {
+  const t = useTranslation(language);
   const [level, setLevel] = useState(0);
 
   useEffect(() => {
-    speak('Hold the phone at comfortable reading distance, about 35 centimetres from your face. Can you read the text clearly? Tap yes or no.');
-  }, []);
+    speak(t('nearVision.voice'), language);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleAnswer = (canRead) => {
     if (canRead) {
@@ -34,14 +36,14 @@ export default function NearVisionTest({ onComplete, onBack, step, totalSteps })
   const current = TEXT_LEVELS[level];
 
   return (
-    <AppShell>
+    <AppShell language={language}>
       <Header
-        title="Near Vision"
-        subtitle={`Level ${level + 1} of ${TEXT_LEVELS.length} — ${current.label}`}
-        
+        title={t('nearVision.title')}
+        subtitle={t('nearVision.levelOf')(level + 1, TEXT_LEVELS.length, current.label)}
         onBack={onBack}
         step={step}
         totalSteps={totalSteps}
+        language={language}
       />
 
       <div style={{ padding: '16px 20px', flex: 1, display: 'flex', flexDirection: 'column' }}>
@@ -58,7 +60,7 @@ export default function NearVisionTest({ onComplete, onBack, step, totalSteps })
           gap: 8,
         }}>
           <span style={{ fontSize: 20 }}>📏</span>
-          Hold phone at arm's length (~35cm / 14 inches)
+          {t('nearVision.holdPhone')}
         </div>
 
         {/* Text display */}
@@ -87,7 +89,7 @@ export default function NearVisionTest({ onComplete, onBack, step, totalSteps })
         </div>
 
         <div style={{ fontSize: 15, fontWeight: 600, textAlign: 'center', marginBottom: 16, color: '#374151' }}>
-          Can you read this text clearly?
+          {t('nearVision.question')}
         </div>
 
         <div style={{ display: 'flex', gap: 12 }}>
@@ -105,7 +107,7 @@ export default function NearVisionTest({ onComplete, onBack, step, totalSteps })
               cursor: 'pointer',
             }}
           >
-            ✓ Yes, clearly
+            {t('nearVision.yesButton')}
           </button>
           <button
             onClick={() => handleAnswer(false)}
@@ -121,7 +123,7 @@ export default function NearVisionTest({ onComplete, onBack, step, totalSteps })
               cursor: 'pointer',
             }}
           >
-            ✗ It's blurry
+            {t('nearVision.noButton')}
           </button>
         </div>
 

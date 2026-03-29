@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { AppShell, Header } from '../components/Layout';
 import { speak } from '../utils/voice';
+import { useTranslation } from '../utils/useTranslation';
 
 // 8 contrast levels from high to very low
 const LEVELS = [
@@ -60,7 +61,8 @@ function LandoltC({ direction, opacity, size = 140 }) {
   );
 }
 
-export default function ContrastTest({ onComplete, onBack, step, totalSteps }) {
+export default function ContrastTest({ onComplete, onBack, step, totalSteps, language = 'en' }) {
+  const t = useTranslation(language);
   const [level, setLevel] = useState(0);
   const [direction, setDirection] = useState('right');
   const [fails, setFails] = useState(0);
@@ -74,8 +76,8 @@ export default function ContrastTest({ onComplete, onBack, step, totalSteps }) {
   }, [level, randomDir]);
 
   useEffect(() => {
-    speak('Can you see the letter C? Which way is the opening pointing? Tap the arrow or tap the X if you cannot see it.');
-  }, []);
+    speak(t('contrast.voice'), language);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleAnswer = (answer) => {
     if (answer === direction) {
@@ -100,21 +102,21 @@ export default function ContrastTest({ onComplete, onBack, step, totalSteps }) {
   const current = LEVELS[level];
 
   return (
-    <AppShell>
+    <AppShell language={language}>
       <Header
-        title="Contrast Sensitivity"
-        subtitle={`Level ${level + 1} of ${LEVELS.length}`}
-        
+        title={t('contrast.title')}
+        subtitle={t('contrast.levelOf')(level + 1, LEVELS.length)}
         onBack={onBack}
         step={step}
         totalSteps={totalSteps}
+        language={language}
       />
 
       <div style={{ padding: '16px 20px', flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <div style={{
           fontSize: 13, color: '#6b7280', marginBottom: 16, textAlign: 'center',
         }}>
-          Which direction is the gap in the C pointing?
+          {t('contrast.question')}
         </div>
 
         {/* C display */}
@@ -162,14 +164,14 @@ export default function ContrastTest({ onComplete, onBack, step, totalSteps }) {
             width: '100%',
           }}
         >
-          ✗ I can't see the C
+          {t('contrast.cantSee')}
         </button>
 
         {/* Contrast level indicator */}
         <div style={{ marginTop: 16, width: '100%' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: '#9ca3af', marginBottom: 4 }}>
-            <span>High contrast</span>
-            <span>Low contrast</span>
+            <span>{t('contrast.highContrast')}</span>
+            <span>{t('contrast.lowContrast')}</span>
           </div>
           <div style={{ background: '#f3f4f6', borderRadius: 4, height: 6, overflow: 'hidden' }}>
             <div style={{

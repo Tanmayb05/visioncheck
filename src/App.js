@@ -90,6 +90,7 @@ function App() {
           setProfile={setProfile}
           onNext={goNext}
           onBack={goBack}
+          language={language}
         />
       );
 
@@ -100,6 +101,7 @@ function App() {
           onBack={goBack}
           step={testStep}
           totalSteps={totalTestSteps}
+          language={language}
         />
       );
 
@@ -110,6 +112,7 @@ function App() {
           onBack={goBack}
           step={testStep}
           totalSteps={totalTestSteps}
+          language={language}
         />
       );
 
@@ -120,6 +123,7 @@ function App() {
           onBack={goBack}
           step={testStep}
           totalSteps={totalTestSteps}
+          language={language}
         />
       );
 
@@ -130,6 +134,7 @@ function App() {
           onBack={goBack}
           step={testStep}
           totalSteps={totalTestSteps}
+          language={language}
         />
       );
 
@@ -140,6 +145,7 @@ function App() {
           onBack={goBack}
           step={testStep}
           totalSteps={totalTestSteps}
+          language={language}
         />
       );
 
@@ -150,6 +156,7 @@ function App() {
           onBack={goBack}
           step={testStep}
           totalSteps={totalTestSteps}
+          language={language}
         />
       );
 
@@ -160,6 +167,7 @@ function App() {
           onBack={goBack}
           step={testStep}
           totalSteps={totalTestSteps}
+          language={language}
         />
       );
 
@@ -170,6 +178,7 @@ function App() {
           onBack={goBack}
           step={testStep}
           totalSteps={totalTestSteps}
+          language={language}
         />
       );
 

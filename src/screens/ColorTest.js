@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { AppShell, Header } from '../components/Layout';
 import { speak } from '../utils/voice';
+import { useTranslation } from '../utils/useTranslation';
 
 // Ishihara-style plates rendered with SVG dot patterns
 // Each plate: number visible to normal vision, number visible to color-blind, or none
@@ -119,7 +120,8 @@ function makeSessionSeed() {
   return Math.floor(Math.random() * 99999) + 1;
 }
 
-export default function ColorTest({ onComplete, onBack, step, totalSteps }) {
+export default function ColorTest({ onComplete, onBack, step, totalSteps, language = 'en' }) {
+  const t = useTranslation(language);
   const [plateIdx, setPlateIdx] = useState(0);
   const [answers, setAnswers] = useState([]);
   const [input, setInput] = useState('');
@@ -129,8 +131,8 @@ export default function ColorTest({ onComplete, onBack, step, totalSteps }) {
   const plate = PLATES[plateIdx];
 
   useEffect(() => {
-    speak('What number do you see in the circle of dots? Tap the number, or tap X if you cannot see one.');
-  }, [plateIdx]);
+    speak(t('color.voice'), language);
+  }, [plateIdx]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSubmit = (val) => {
     const answer = val === 'none' ? null : parseInt(val);
@@ -156,19 +158,19 @@ export default function ColorTest({ onComplete, onBack, step, totalSteps }) {
   };
 
   return (
-    <AppShell>
+    <AppShell language={language}>
       <Header
-        title="Color Vision"
-        subtitle={`Plate ${plateIdx + 1} of ${PLATES.length}`}
-        
+        title={t('color.title')}
+        subtitle={t('color.plateOf')(plateIdx + 1, PLATES.length)}
         onBack={onBack}
         step={step}
         totalSteps={totalSteps}
+        language={language}
       />
 
       <div style={{ padding: '16px 20px', flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <div style={{ fontSize: 13, color: '#6b7280', marginBottom: 16, textAlign: 'center' }}>
-          What number do you see in the dots?
+          {t('color.question')}
         </div>
 
         {/* Plate */}
@@ -261,7 +263,7 @@ export default function ColorTest({ onComplete, onBack, step, totalSteps }) {
               width: '100%',
             }}
           >
-            Submit Answer
+            {t('color.submit')}
           </button>
           <button
             onClick={() => handleSubmit('none')}
@@ -277,7 +279,7 @@ export default function ColorTest({ onComplete, onBack, step, totalSteps }) {
               width: '100%',
             }}
           >
-            ✗ I can't see a number
+            {t('color.cantSee')}
           </button>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { AppShell, Header, BigButton, EyeCoverInstruction } from '../components/Layout';
 import { speak } from '../utils/voice';
+import { useTranslation } from '../utils/useTranslation';
 
 function AmslerGrid({ markedAreas, onMark, size = 280 }) {
   const cells = 10;
@@ -79,7 +80,8 @@ function AmslerGrid({ markedAreas, onMark, size = 280 }) {
   );
 }
 
-export default function AmslerTest({ onComplete, onBack, step, totalSteps }) {
+export default function AmslerTest({ onComplete, onBack, step, totalSteps, language = 'en' }) {
+  const t = useTranslation(language);
   const [phase, setPhase] = useState('right'); // right | left
   const [rightResult, setRightResult] = useState({ wavy: null, marked: new Set() });
   const [leftResult, setLeftResult] = useState({ wavy: null, marked: new Set() });
@@ -88,8 +90,8 @@ export default function AmslerTest({ onComplete, onBack, step, totalSteps }) {
   const setCurrentResult = phase === 'right' ? setRightResult : setLeftResult;
 
   useEffect(() => {
-    speak('Look at the green center dot. Are all the grid lines straight? Tap any areas that look wavy, blurry, dark, or missing.');
-  }, [phase]);
+    speak(t('amsler.voice'), language);
+  }, [phase]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleMark = (updater) => {
     setCurrentResult(prev => ({ ...prev, marked: updater(prev.marked) }));
@@ -119,21 +121,21 @@ export default function AmslerTest({ onComplete, onBack, step, totalSteps }) {
   const canProceed = currentResult.wavy !== null;
 
   return (
-    <AppShell>
+    <AppShell language={language}>
       <Header
-        title="Amsler Grid"
-        subtitle={`${phase === 'right' ? 'Right' : 'Left'} Eye — Macular Test`}
-        
+        title={t('amsler.title')}
+        subtitle={phase === 'right' ? t('amsler.rightEyeMacular') : t('amsler.leftEyeMacular')}
         onBack={onBack}
         step={step}
         totalSteps={totalSteps}
+        language={language}
       />
 
       <div style={{ padding: '16px 20px', flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <EyeCoverInstruction eye={phase === 'right' ? 'left' : 'right'} />
+        <EyeCoverInstruction eye={phase === 'right' ? 'left' : 'right'} language={language} />
 
         <div style={{ fontSize: 13, color: '#6b7280', marginBottom: 12, textAlign: 'center' }}>
-          Stare at the center dot. Tap cells that look wavy, dark, or missing.
+          {t('amsler.instructions')}
         </div>
 
         <AmslerGrid
@@ -148,14 +150,14 @@ export default function AmslerTest({ onComplete, onBack, step, totalSteps }) {
             background: '#fef2f2', border: '1px solid #fca5a5',
             borderRadius: 8, padding: '6px 12px',
           }}>
-            {currentResult.marked.size} area{currentResult.marked.size !== 1 ? 's' : ''} marked — tap again to remove
+            {t('amsler.areasMarked')(currentResult.marked.size)}
           </div>
         )}
 
         {/* Wavy question */}
         <div style={{ marginTop: 16, width: '100%' }}>
           <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 10, textAlign: 'center' }}>
-            Do the grid lines look straight and even?
+            {t('amsler.question')}
           </div>
           <div style={{ display: 'flex', gap: 10 }}>
             <button
@@ -168,7 +170,7 @@ export default function AmslerTest({ onComplete, onBack, step, totalSteps }) {
                 color: currentResult.wavy === false ? '#15803d' : '#374151',
               }}
             >
-              ✓ Yes, straight
+              {t('amsler.yesStraight')}
             </button>
             <button
               onClick={() => handleWavy(true)}
@@ -180,14 +182,14 @@ export default function AmslerTest({ onComplete, onBack, step, totalSteps }) {
                 color: currentResult.wavy === true ? '#b91c1c' : '#374151',
               }}
             >
-              ✗ Wavy/Missing
+              {t('amsler.noWavy')}
             </button>
           </div>
         </div>
 
         <div style={{ width: '100%', marginTop: 16 }}>
           <BigButton onClick={handleNext} disabled={!canProceed}>
-            {phase === 'right' ? 'Test Left Eye →' : 'Next Test →'}
+            {phase === 'right' ? t('amsler.testLeftEye') : t('common.nextTest')}
           </BigButton>
         </div>
       </div>

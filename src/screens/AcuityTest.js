@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { AppShell, Header, DirectionButton, EyeCoverInstruction } from '../components/Layout';
 import { useViewport } from '../hooks/useViewport';
 import { speak } from '../utils/voice';
+import { useTranslation } from '../utils/useTranslation';
 
 // Snellen-equivalent lines: index = line number, value = denominator (20/X)
 const LINES = [200, 100, 70, 50, 40, 30, 25, 20, 15];
@@ -30,8 +31,9 @@ function TumblingE({ direction, size }) {
   );
 }
 
-export default function AcuityTest({ onComplete, onBack, step, totalSteps }) {
+export default function AcuityTest({ onComplete, onBack, step, totalSteps, language = 'en' }) {
   const viewport = useViewport();
+  const t = useTranslation(language);
   const [phase, setPhase] = useState('right'); // 'right' | 'left' | 'done'
   const [lineIdx, setLineIdx] = useState(0);
   const [direction, setDirection] = useState('');
@@ -47,10 +49,10 @@ export default function AcuityTest({ onComplete, onBack, step, totalSteps }) {
   useEffect(() => {
     setDirection(randomDir());
     const msg = phase === 'right'
-      ? 'Cover your LEFT eye. Hold the phone at arm\'s length. Look at the E and answer which way the open side or lines of the E face.'
-      : 'Now cover your RIGHT eye. Keep the phone at the same distance. Answer which way the open side or lines of the E face.';
-    speak(msg);
-  }, [phase, randomDir]);
+      ? t('acuity.voiceRight')
+      : t('acuity.voiceLeft');
+    speak(msg, language);
+  }, [phase, randomDir]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     setDirection(randomDir());
@@ -121,18 +123,18 @@ export default function AcuityTest({ onComplete, onBack, step, totalSteps }) {
   const directionButtonSize = viewport.isSmallPhone ? 64 : viewport.isTablet ? 88 : viewport.isDesktop ? 96 : 72;
 
   return (
-    <AppShell>
+    <AppShell language={language}>
       <Header
-        title="Visual Acuity"
-        subtitle={`${phase === 'right' ? 'Right Eye' : 'Left Eye'} — ${vaLabel}`}
-        
+        title={t('acuity.title')}
+        subtitle={`${phase === 'right' ? t('acuity.rightEye') : t('acuity.leftEye')} — ${vaLabel}`}
         onBack={onBack}
         step={step}
         totalSteps={totalSteps}
+        language={language}
       />
 
       <div className="acuity-screen" style={{ padding: '1rem var(--shell-padding-x)', flex: 1, display: 'flex', flexDirection: 'column' }}>
-        <EyeCoverInstruction eye={phase === 'right' ? 'left' : 'right'} />
+        <EyeCoverInstruction eye={phase === 'right' ? 'left' : 'right'} language={language} />
 
         <div className="acuity-instructions" style={{
           fontSize: '0.8125rem',
@@ -140,7 +142,7 @@ export default function AcuityTest({ onComplete, onBack, step, totalSteps }) {
           marginBottom: '0.75rem',
           textAlign: 'center',
         }}>
-          Hold the phone at arm&apos;s length. Swipe the direction the open side of the E faces, or tap an arrow below.
+          {t('acuity.instructions')}
         </div>
 
         {/* E display area */}
@@ -204,7 +206,7 @@ export default function AcuityTest({ onComplete, onBack, step, totalSteps }) {
           fontSize: '0.8125rem',
           color: '#6b7280',
         }}>
-          Line {lineIdx + 1} of {LINES.length} · {vaLabel}
+          {t('acuity.lineOf')(lineIdx + 1, LINES.length, vaLabel)}
         </div>
       </div>
     </AppShell>

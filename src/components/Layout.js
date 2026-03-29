@@ -1,7 +1,9 @@
 import React from 'react';
 import { useViewport } from '../hooks/useViewport';
+import { useTranslation } from '../utils/useTranslation';
+import { RTL_LANGUAGES } from '../utils/translations';
 
-export function AppShell({ children }) {
+export function AppShell({ children, language = 'en' }) {
   const viewport = useViewport();
   const viewportClassName = [
     'app-frame',
@@ -11,8 +13,10 @@ export function AppShell({ children }) {
     viewport.isDesktop ? 'viewport-desktop' : '',
   ].filter(Boolean).join(' ');
 
+  const isRTL = RTL_LANGUAGES.includes(language);
+
   return (
-    <div className={viewportClassName}>
+    <div className={viewportClassName} dir={isRTL ? 'rtl' : 'ltr'}>
       <div
         className="app-shell"
         style={{
@@ -39,7 +43,8 @@ export function Screen({ children, style = {} }) {
   );
 }
 
-export function Header({ title, subtitle, onBack, step, totalSteps }) {
+export function Header({ title, subtitle, onBack, step, totalSteps, language = 'en' }) {
+  const t = useTranslation(language);
   return (
     <div className="app-header" style={{
       background: '#1e3a5f',
@@ -65,13 +70,13 @@ export function Header({ title, subtitle, onBack, step, totalSteps }) {
           }}
           aria-label="Go back"
         >
-          ← Back
+          {t('common.back')}
         </button>
       )}
       {step && totalSteps && (
         <div style={{ marginBottom: '0.625rem' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 5, fontSize: '0.75rem', opacity: 0.75, letterSpacing: 0.4, textTransform: 'uppercase' }}>
-            <span>Test {step} of {totalSteps}</span>
+            <span>{t('common.testOf')(step, totalSteps)}</span>
             <span>{Math.round((step / totalSteps) * 100)}%</span>
           </div>
           <div style={{ background: 'rgba(255,255,255,0.15)', borderRadius: 2, height: 4 }}>
@@ -177,14 +182,19 @@ export function DirectionButton({ direction, onClick, size = 72 }) {
   );
 }
 
-export function StatusBadge({ status, size = 'md' }) {
+export function StatusBadge({ status, size = 'md', language = 'en' }) {
+  const t = useTranslation(language);
   const colors = {
     pass: { bg: '#f0fff4', text: '#276749', border: '#9ae6b4' },
     warn: { bg: '#fffaf0', text: '#c05621', border: '#fbd38d' },
     fail: { bg: '#fff5f5', text: '#c53030', border: '#feb2b2' },
     default: { bg: '#f7fafc', text: '#718096', border: '#cbd5e0' },
   };
-  const labels = { pass: 'Normal', warn: 'Monitor', fail: 'Refer' };
+  const labels = {
+    pass: t('common.statusNormal'),
+    warn: t('common.statusMonitor'),
+    fail: t('common.statusRefer'),
+  };
   const c = colors[status] || colors.default;
   return (
     <span style={{
@@ -198,7 +208,7 @@ export function StatusBadge({ status, size = 'md' }) {
       letterSpacing: 0.3,
       textTransform: 'uppercase',
     }}>
-      {labels[status] || 'Pending'}
+      {labels[status] || t('common.statusPending')}
     </span>
   );
 }
@@ -224,7 +234,8 @@ export function VoiceButton({ onClick, speaking }) {
   );
 }
 
-export function EyeCoverInstruction({ eye }) {
+export function EyeCoverInstruction({ eye, language = 'en' }) {
+  const t = useTranslation(language);
   return (
     <div className="eye-cover-instruction" style={{
       background: '#ebf8ff',
@@ -246,17 +257,18 @@ export function EyeCoverInstruction({ eye }) {
       </div>
       <div>
         <div style={{ fontWeight: 600, fontSize: '0.8125rem', color: '#1a202c' }}>
-          Cover your {eye === 'right' ? 'RIGHT' : 'LEFT'} eye
+          {eye === 'right' ? t('common.coverRight') : t('common.coverLeft')}
         </div>
         <div style={{ fontSize: '0.75rem', color: '#718096', marginTop: 2 }}>
-          Use your hand or paper. Keep both eyes open.
+          {t('common.coverInstruction')}
         </div>
       </div>
     </div>
   );
 }
 
-export function Disclaimer() {
+export function Disclaimer({ language = 'en' }) {
+  const t = useTranslation(language);
   return (
     <div className="disclaimer" style={{
       background: '#fffaf0',
@@ -268,7 +280,7 @@ export function Disclaimer() {
       textAlign: 'center',
       letterSpacing: 0.2,
     }}>
-      Screening tool only — not a substitute for professional medical diagnosis. Consult a qualified eye care provider.
+      {t('common.disclaimer')}
     </div>
   );
 }

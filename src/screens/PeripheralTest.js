@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { AppShell, Header } from '../components/Layout';
 import { speak } from '../utils/voice';
+import { useTranslation } from '../utils/useTranslation';
 
 const TOTAL_DOTS = 15;
 const DOT_DURATION = 1200; // ms each dot is visible
 const PAUSE_BETWEEN = 800;
 
-export default function PeripheralTest({ onComplete, onBack, step, totalSteps }) {
+export default function PeripheralTest({ onComplete, onBack, step, totalSteps, language = 'en' }) {
+  const t = useTranslation(language);
   const [phase, setPhase] = useState('intro'); // intro | running | done
   const [currentDot, setCurrentDot] = useState(null);
   const [tapped, setTapped] = useState(false);
@@ -16,8 +18,8 @@ export default function PeripheralTest({ onComplete, onBack, step, totalSteps })
   const dotIndexRef = useRef(0);
 
   useEffect(() => {
-    speak('Keep looking at the center dot. Tap the screen as soon as you see any dot appear anywhere else on the screen.');
-  }, []);
+    speak(t('peripheral.voice'), language);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const showNextDot = useCallback(() => {
     if (dotIndexRef.current >= TOTAL_DOTS) {
@@ -85,14 +87,14 @@ export default function PeripheralTest({ onComplete, onBack, step, totalSteps })
   const progress = Math.round((results.total / TOTAL_DOTS) * 100);
 
   return (
-    <AppShell>
+    <AppShell language={language}>
       <Header
-        title="Peripheral Vision"
-        subtitle="Keep focus on the center"
-        
+        title={t('peripheral.title')}
+        subtitle={t('peripheral.subtitle')}
         onBack={onBack}
         step={step}
         totalSteps={totalSteps}
+        language={language}
       />
 
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
@@ -112,8 +114,8 @@ export default function PeripheralTest({ onComplete, onBack, step, totalSteps })
             }}>
               <span style={{ fontSize: 24, flexShrink: 0 }}>📱</span>
               <div>
-                <div style={{ fontWeight: 700, marginBottom: 2 }}>Hold phone at arm's length</div>
-                <div style={{ fontSize: 12, opacity: 0.85 }}>Keep the screen about 50–60 cm (20–24 inches) away from your face for an accurate test.</div>
+                <div style={{ fontWeight: 700, marginBottom: 2 }}>{t('peripheral.holdPhoneTitle')}</div>
+                <div style={{ fontSize: 12, opacity: 0.85 }}>{t('peripheral.holdPhoneDetail')}</div>
               </div>
             </div>
             <div style={{
@@ -124,12 +126,12 @@ export default function PeripheralTest({ onComplete, onBack, step, totalSteps })
               fontSize: 14,
               color: '#92400e',
             }}>
-              <div style={{ fontWeight: 700, marginBottom: 8 }}>Instructions:</div>
+              <div style={{ fontWeight: 700, marginBottom: 8 }}>{t('peripheral.instructionsTitle')}</div>
               <ol style={{ paddingLeft: 20, lineHeight: 1.8 }}>
-                <li>Hold phone at <strong>arm's length</strong> (~50–60 cm)</li>
-                <li>Stare at the <strong>blue center dot</strong> — don't look away</li>
-                <li>Tap the screen when you see a <strong>red dot appear</strong> anywhere</li>
-                <li>Try to tap it before it disappears</li>
+                <li>{t('peripheral.instruction1')}</li>
+                <li>{t('peripheral.instruction2')}</li>
+                <li>{t('peripheral.instruction3')}</li>
+                <li>{t('peripheral.instruction4')}</li>
               </ol>
             </div>
             <button
@@ -145,7 +147,7 @@ export default function PeripheralTest({ onComplete, onBack, step, totalSteps })
                 cursor: 'pointer',
               }}
             >
-              ▶ Start Test
+              {t('peripheral.startTest')}
             </button>
           </div>
         ) : (
@@ -228,7 +230,7 @@ export default function PeripheralTest({ onComplete, onBack, step, totalSteps })
               textAlign: 'center',
               pointerEvents: 'none',
             }}>
-              Tap when you see a red dot
+              {t('peripheral.tapPrompt')}
             </div>
           </div>
         )}

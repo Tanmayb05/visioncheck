@@ -1,37 +1,40 @@
 import React from 'react';
 import { AppShell, Header, BigButton, Disclaimer } from '../components/Layout';
+import { useTranslation } from '../utils/useTranslation';
 
-const AGE_GROUPS = [
-  { id: 'child', label: 'Child', sublabel: 'Under 12' },
-  { id: 'teen', label: 'Teen', sublabel: '12–17' },
-  { id: 'adult', label: 'Adult', sublabel: '18–50' },
-  { id: 'elder', label: 'Older Adult', sublabel: '50+' },
-];
-
-const WHO_OPTIONS = [
-  { id: 'myself', label: 'Myself' },
-  { id: 'child', label: 'My Child' },
-  { id: 'other', label: 'Someone Else' },
-];
-
-export default function Profile({ profile, setProfile, onNext, onBack }) {
+export default function Profile({ profile, setProfile, onNext, onBack, language = 'en' }) {
+  const t = useTranslation(language);
   const update = (key, val) => setProfile(p => ({ ...p, [key]: val }));
 
   const isValid = profile.ageGroup && profile.who;
 
+  const AGE_GROUPS = [
+    { id: 'child', label: t('profile.child'), sublabel: t('profile.childAge') },
+    { id: 'teen', label: t('profile.teen'), sublabel: t('profile.teenAge') },
+    { id: 'adult', label: t('profile.adult'), sublabel: t('profile.adultAge') },
+    { id: 'elder', label: t('profile.elder'), sublabel: t('profile.elderAge') },
+  ];
+
+  const WHO_OPTIONS = [
+    { id: 'myself', label: t('profile.myself') },
+    { id: 'child', label: t('profile.myChild') },
+    { id: 'other', label: t('profile.someoneElse') },
+  ];
+
   return (
-    <AppShell>
+    <AppShell language={language}>
       <Header
-        title="Patient Information"
-        subtitle="No personal data is stored or transmitted"
+        title={t('profile.title')}
+        subtitle={t('profile.subtitle')}
         onBack={onBack}
+        language={language}
       />
 
       <div style={{ padding: '20px', flex: 1, display: 'flex', flexDirection: 'column', gap: 22 }}>
         {/* Who is being tested */}
         <div>
           <div style={{ fontWeight: 600, fontSize: 13, marginBottom: 10, color: '#4a5568', textTransform: 'uppercase', letterSpacing: 0.5 }}>
-            Subject
+            {t('profile.subjectLabel')}
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
             {WHO_OPTIONS.map(opt => (
@@ -60,7 +63,7 @@ export default function Profile({ profile, setProfile, onNext, onBack }) {
         {/* Age group */}
         <div>
           <div style={{ fontWeight: 600, fontSize: 13, marginBottom: 10, color: '#4a5568', textTransform: 'uppercase', letterSpacing: 0.5 }}>
-            Age Group
+            {t('profile.ageGroupLabel')}
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 8 }}>
             {AGE_GROUPS.map(ag => (
@@ -94,18 +97,20 @@ export default function Profile({ profile, setProfile, onNext, onBack }) {
         {/* Clinical history */}
         <div>
           <div style={{ fontWeight: 600, fontSize: 13, marginBottom: 10, color: '#4a5568', textTransform: 'uppercase', letterSpacing: 0.5 }}>
-            Medical History
+            {t('profile.medicalHistory')}
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             <QuickQuestion
-              question="Diabetes mellitus"
+              question={t('profile.diabetes')}
               value={profile.diabetes}
               onChange={v => update('diabetes', v)}
+              t={t}
             />
             <QuickQuestion
-              question="Currently using corrective lenses"
+              question={t('profile.glasses')}
               value={profile.glasses}
               onChange={v => update('glasses', v)}
+              t={t}
             />
           </div>
         </div>
@@ -120,15 +125,15 @@ export default function Profile({ profile, setProfile, onNext, onBack }) {
         flexShrink: 0,
       }}>
         <BigButton onClick={onNext} disabled={!isValid}>
-          Begin Eye Tests
+          {t('profile.beginTests')}
         </BigButton>
-        <Disclaimer />
+        <Disclaimer language={language} />
       </div>
     </AppShell>
   );
 }
 
-function QuickQuestion({ question, value, onChange }) {
+function QuickQuestion({ question, value, onChange, t }) {
   return (
     <div style={{
       background: '#f7fafc',
@@ -156,7 +161,7 @@ function QuickQuestion({ question, value, onChange }) {
               letterSpacing: 0.3,
             }}
           >
-            {opt === 'yes' ? 'Yes' : opt === 'no' ? 'No' : 'Unknown'}
+            {opt === 'yes' ? t('common.yes') : opt === 'no' ? t('common.no') : t('common.unknown')}
           </button>
         ))}
       </div>

@@ -1,89 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { AppShell, Header } from '../components/Layout';
 import { speak } from '../utils/voice';
+import { useTranslation } from '../utils/useTranslation';
 
-const SYMPTOMS = [
-  {
-    id: 'blurring',
-    question: 'Do you have blurry or cloudy vision?',
-    icons: '🌫️',
-    hint: 'Things look foggy or out of focus',
-    condition: 'Possible: Cataract, refractive error',
-  },
-  {
-    id: 'night_difficulty',
-    question: 'Do you struggle to see at night or in dim light?',
-    icons: '🌙',
-    hint: 'Difficult to see in dark rooms or at night',
-    condition: 'Possible: Cataract, retinal issue',
-  },
-  {
-    id: 'eye_pain',
-    question: 'Do you have eye pain or pressure?',
-    icons: '😣',
-    hint: 'Aching, throbbing, or pressure in the eye',
-    condition: 'Possible: Glaucoma',
-  },
-  {
-    id: 'halos',
-    question: 'Do you see halos or rainbow circles around lights?',
-    icons: '💡',
-    hint: 'Rings of light around lamps or headlights',
-    condition: 'Possible: Glaucoma, cataract',
-  },
-  {
-    id: 'tunnel',
-    question: 'Has your side (peripheral) vision gotten worse?',
-    icons: '🔭',
-    hint: 'Like looking through a tunnel',
-    condition: 'Possible: Advanced glaucoma',
-  },
-  {
-    id: 'floaters',
-    question: 'Do you suddenly see floaters or flashes of light?',
-    icons: '✨',
-    hint: 'Spots, strings, or flashes moving in your vision',
-    condition: 'Possible: Retinal detachment (urgent)',
-  },
-  {
-    id: 'curtain',
-    question: 'Do you see a shadow, curtain, or dark area in your vision?',
-    icons: '🪟',
-    hint: 'Part of your vision is blocked or dark',
-    condition: 'Possible: Retinal detachment (emergency)',
-  },
-  {
-    id: 'diabetes',
-    question: 'Do you have diabetes or a family history of diabetes?',
-    icons: '🩸',
-    hint: 'Diabetes can affect the eyes',
-    condition: 'Risk factor: Diabetic retinopathy',
-  },
-  {
-    id: 'family_history',
-    question: 'Does anyone in your family have glaucoma or blindness?',
-    icons: '👨‍👩‍👦',
-    hint: 'Eye conditions can run in families',
-    condition: 'Risk factor: Glaucoma',
-  },
-  {
-    id: 'itching',
-    question: 'Do your eyes itch, tear, or feel gritty or sandy?',
-    icons: '😤',
-    hint: 'Persistent irritation or discharge',
-    condition: 'Possible: Trachoma, dry eye, infection',
-  },
-];
+export default function SymptomsTest({ onComplete, onBack, step, totalSteps, language = 'en' }) {
+  const t = useTranslation(language);
+  const SYMPTOMS = t('symptoms.questions');
 
-export default function SymptomsTest({ onComplete, onBack, step, totalSteps }) {
   const [questionIdx, setQuestionIdx] = useState(0);
   const [answers, setAnswers] = useState({});
 
   const symptom = SYMPTOMS[questionIdx];
 
   useEffect(() => {
-    speak(symptom.question);
-  }, [questionIdx, symptom.question]);
+    speak(symptom.question, language);
+  }, [questionIdx, symptom.question]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleAnswer = (val) => {
     const newAnswers = { ...answers, [symptom.id]: val };
@@ -99,14 +30,14 @@ export default function SymptomsTest({ onComplete, onBack, step, totalSteps }) {
   const progress = ((questionIdx) / SYMPTOMS.length) * 100;
 
   return (
-    <AppShell>
+    <AppShell language={language}>
       <Header
-        title="Symptom Check"
-        subtitle={`Question ${questionIdx + 1} of ${SYMPTOMS.length}`}
-        
+        title={t('symptoms.title')}
+        subtitle={t('symptoms.questionOf')(questionIdx + 1, SYMPTOMS.length)}
         onBack={onBack}
         step={step}
         totalSteps={totalSteps}
+        language={language}
       />
 
       <div style={{ padding: '20px', flex: 1, display: 'flex', flexDirection: 'column' }}>
@@ -174,7 +105,7 @@ export default function SymptomsTest({ onComplete, onBack, step, totalSteps }) {
               gap: 10,
             }}
           >
-            Yes
+            {t('symptoms.yes')}
           </button>
           <div style={{ display: 'flex', gap: 10 }}>
             <button
@@ -195,7 +126,7 @@ export default function SymptomsTest({ onComplete, onBack, step, totalSteps }) {
                 gap: 8,
               }}
             >
-              No
+              {t('symptoms.no')}
             </button>
             <button
               onClick={() => handleAnswer('unsure')}
@@ -215,7 +146,7 @@ export default function SymptomsTest({ onComplete, onBack, step, totalSteps }) {
                 gap: 8,
               }}
             >
-              Unsure
+              {t('symptoms.unsure')}
             </button>
           </div>
         </div>

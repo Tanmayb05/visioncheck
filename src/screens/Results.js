@@ -5,45 +5,20 @@ import {
   scoreNearVision, scoreAmsler, scorePeripheral, scoreSymptoms,
   computeOverallUrgency,
 } from '../utils/scoring';
-import { analyzeResults, getLocalSummary } from '../utils/gemini';
+import { analyzeResults } from '../utils/gemini';
 import { speak } from '../utils/voice';
+import { useTranslation } from '../utils/useTranslation';
 
-const TEST_LABELS = {
-  acuity: { label: 'Visual Acuity', desc: 'Distance vision clarity' },
-  color: { label: 'Color Vision', desc: 'Color discrimination ability' },
-  astigmatism: { label: 'Astigmatism', desc: 'Corneal shape regularity' },
-  contrast: { label: 'Contrast Sensitivity', desc: 'Detection of subtle luminance differences' },
-  near: { label: 'Near Vision', desc: 'Reading and close-range vision' },
-  amsler: { label: 'Macular Health', desc: 'Central vision and grid distortion' },
-  peripheral: { label: 'Peripheral Vision', desc: 'Visual field (side vision)' },
-  symptoms: { label: 'Symptoms Review', desc: 'Self-reported visual concerns' },
-};
-
-const URGENCY_CONFIG = {
-  routine: {
-    color: '#276749', bg: '#f0fff4', border: '#9ae6b4',
-    label: 'No Significant Findings',
-    sub: 'Results are within normal range. Routine annual check recommended.',
-  },
-  soon: {
-    color: '#c05621', bg: '#fffaf0', border: '#fbd38d',
-    label: 'Follow-Up Recommended',
-    sub: 'Schedule an appointment with an eye care provider within the next few months.',
-  },
-  urgent: {
-    color: '#c53030', bg: '#fff5f5', border: '#feb2b2',
-    label: 'Clinical Evaluation Advised',
-    sub: 'We recommend seeing an eye doctor within 1–2 weeks.',
-  },
-  emergency: {
-    color: '#742a2a', bg: '#fff5f5', border: '#fc8181',
-    label: 'Seek Immediate Care',
-    sub: 'Please proceed to a clinic or emergency eye care facility promptly.',
-  },
-};
-
-function UrgencyBanner({ urgency }) {
+function UrgencyBanner({ urgency, t }) {
+  const URGENCY_CONFIG = {
+    routine: { color: '#276749', bg: '#f0fff4', border: '#9ae6b4' },
+    soon:    { color: '#c05621', bg: '#fffaf0', border: '#fbd38d' },
+    urgent:  { color: '#c53030', bg: '#fff5f5', border: '#feb2b2' },
+    emergency: { color: '#742a2a', bg: '#fff5f5', border: '#fc8181' },
+  };
   const cfg = URGENCY_CONFIG[urgency] || URGENCY_CONFIG.routine;
+  const label = t(`results.urgency.${urgency}.label`) || t('results.urgency.routine.label');
+  const sub   = t(`results.urgency.${urgency}.sub`)   || t('results.urgency.routine.sub');
   return (
     <div style={{
       background: cfg.bg,
@@ -53,26 +28,14 @@ function UrgencyBanner({ urgency }) {
       marginBottom: 18,
       borderLeft: `4px solid ${cfg.color}`,
     }}>
-      <div style={{ fontWeight: 700, fontSize: 15, color: cfg.color, marginBottom: 4 }}>{cfg.label}</div>
-      <div style={{ fontSize: 13, color: cfg.color, opacity: 0.85, lineHeight: 1.5 }}>{cfg.sub}</div>
+      <div style={{ fontWeight: 700, fontSize: 15, color: cfg.color, marginBottom: 4 }}>{label}</div>
+      <div style={{ fontSize: 13, color: cfg.color, opacity: 0.85, lineHeight: 1.5 }}>{sub}</div>
     </div>
   );
 }
 
-const ACUITY_DESCRIPTIONS = {
-  '20/200': { short: 'Very poor', plain: 'You can see at 20 feet what a person with normal vision sees at 200 feet. This is the legal threshold for blindness in many countries.' },
-  '20/100': { short: 'Poor', plain: 'You can see at 20 feet what a normal-vision person sees at 100 feet. Significant difficulty with daily tasks.' },
-  '20/70': { short: 'Low vision', plain: 'You can see at 20 feet what a normal-vision person sees at 70 feet. Reading and driving are likely difficult.' },
-  '20/50': { short: 'Below normal', plain: 'You can see at 20 feet what a normal-vision person sees at 50 feet. Fine detail (e.g. small print) is hard to see.' },
-  '20/40': { short: 'Mildly reduced', plain: 'You can see at 20 feet what a normal-vision person sees at 40 feet. Many countries require at least 20/40 to drive without correction.' },
-  '20/30': { short: 'Near normal', plain: 'You can see at 20 feet what a normal-vision person sees at 30 feet. Slightly below perfect but functional for most tasks.' },
-  '20/25': { short: 'Good', plain: 'Very close to perfect vision. Most people with this score need no correction for everyday tasks.' },
-  '20/20': { short: 'Normal', plain: 'Normal vision. You can see clearly at 20 feet — the standard benchmark for healthy eyesight.' },
-  '20/15': { short: 'Better than normal', plain: 'Sharper than average. You can see at 20 feet what most people can only see at 15 feet.' },
-};
-
-function AcuityExplanation({ va, label }) {
-  const info = va ? ACUITY_DESCRIPTIONS[va] : null;
+function AcuityExplanation({ va, label, t }) {
+  const info = va ? t('results.acuityDescriptions')[va] : null;
   if (!info) return null;
   return (
     <div style={{
@@ -89,10 +52,11 @@ function AcuityExplanation({ va, label }) {
   );
 }
 
-function TestCard({ id, score }) {
+function TestCard({ id, score, t, language }) {
   const [expanded, setExpanded] = useState(false);
-  const meta = TEST_LABELS[id];
-  if (!meta || !score) return null;
+  const testLabel = t(`results.testLabels.${id}`);
+  const testDesc  = t(`results.testLabels.${id}Desc`);
+  if (!testLabel || !score) return null;
 
   return (
     <div
@@ -109,10 +73,10 @@ function TestCard({ id, score }) {
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
         <div style={{ flex: 1 }}>
-          <div style={{ fontWeight: 600, fontSize: 14, color: '#1a202c' }}>{meta.label}</div>
-          <div style={{ fontSize: 12, color: '#718096', marginTop: 2 }}>{meta.desc}</div>
+          <div style={{ fontWeight: 600, fontSize: 14, color: '#1a202c' }}>{testLabel}</div>
+          <div style={{ fontSize: 12, color: '#718096', marginTop: 2 }}>{testDesc}</div>
         </div>
-        <StatusBadge status={score.status} size="sm" />
+        <StatusBadge status={score.status} size="sm" language={language} />
         <span style={{ color: '#a0aec0', fontSize: 11, marginLeft: 4 }}>{expanded ? '▲' : '▼'}</span>
       </div>
 
@@ -127,69 +91,70 @@ function TestCard({ id, score }) {
         }}>
           {id === 'acuity' && (
             <div>
-              <div>Right eye: <strong>{score.right?.va || '—'}</strong></div>
-              <div>Left eye: <strong>{score.left?.va || '—'}</strong></div>
-              <AcuityExplanation va={score.right?.va} label="Right eye" />
-              <AcuityExplanation va={score.left?.va} label="Left eye" />
-              {score.status !== 'pass' && <div style={{ color: '#c05621', marginTop: 6 }}>Visual acuity below 20/40. Corrective lenses may be indicated.</div>}
+              <div>{t('results.details.rightEye')}: <strong>{score.right?.va || '—'}</strong></div>
+              <div>{t('results.details.leftEye')}: <strong>{score.left?.va || '—'}</strong></div>
+              <AcuityExplanation va={score.right?.va} label={t('results.details.rightEye')} t={t} />
+              <AcuityExplanation va={score.left?.va} label={t('results.details.leftEye')} t={t} />
+              {score.status !== 'pass' && <div style={{ color: '#c05621', marginTop: 6 }}>{t('results.details.acuityWarn')}</div>}
             </div>
           )}
           {id === 'color' && (
             <div>
-              <div>{score.correct} of {score.total} plates identified correctly</div>
-              {score.status !== 'pass' && <div style={{ color: '#c05621', marginTop: 6 }}>Color vision deficiency detected. Typically hereditary; advise ophthalmology review.</div>}
+              <div>{t('results.details.colorPlates')(score.correct, score.total)}</div>
+              {score.status !== 'pass' && <div style={{ color: '#c05621', marginTop: 6 }}>{t('results.details.colorWarn')}</div>}
             </div>
           )}
           {id === 'astigmatism' && (
             <div>
-              {score.allSame ? 'No astigmatism detected.' :
-                `${score.affected} unequal meridian${score.affected !== 1 ? 's' : ''} detected.`}
-              {score.status !== 'pass' && <div style={{ color: '#c05621', marginTop: 6 }}>Astigmatism may produce blurred or distorted vision. Correctable with cylindrical lenses.</div>}
+              {score.allSame
+                ? t('results.details.astigmatismNone')
+                : t('results.details.astigmatismFound')(score.affected)}
+              {score.status !== 'pass' && <div style={{ color: '#c05621', marginTop: 6 }}>{t('results.details.astigmatismWarn')}</div>}
             </div>
           )}
           {id === 'contrast' && (
             <div>
-              <div>Passed {score.level + 1} of 8 contrast levels.</div>
-              {score.status !== 'pass' && <div style={{ color: '#c05621', marginTop: 6 }}>Reduced contrast sensitivity may indicate early cataract, glaucoma, or macular pathology.</div>}
+              <div>{t('results.details.contrastPassed')(score.level + 1)}</div>
+              {score.status !== 'pass' && <div style={{ color: '#c05621', marginTop: 6 }}>{t('results.details.contrastWarn')}</div>}
             </div>
           )}
           {id === 'near' && (
             <div>
-              {score.status === 'pass' ? 'Near vision within normal range.' : 'Near vision difficulty detected.'}
-              {score.status !== 'pass' && <div style={{ color: '#c05621', marginTop: 6 }}>Reading glasses may be required. Presbyopia is common after age 40.</div>}
+              {score.status === 'pass' ? t('results.details.nearPass') : t('results.details.nearFail')}
+              {score.status !== 'pass' && <div style={{ color: '#c05621', marginTop: 6 }}>{t('results.details.nearWarn')}</div>}
             </div>
           )}
           {id === 'amsler' && (
             <div>
-              {score.rightIssues && <div>Right eye: Grid distortion or scotoma detected.</div>}
-              {score.leftIssues && <div>Left eye: Grid distortion or scotoma detected.</div>}
-              {!score.rightIssues && !score.leftIssues && <div>No macular distortion detected.</div>}
+              {score.rightIssues && <div>{t('results.details.amslerRightIssue')}</div>}
+              {score.leftIssues && <div>{t('results.details.amslerLeftIssue')}</div>}
+              {!score.rightIssues && !score.leftIssues && <div>{t('results.details.amslerNone')}</div>}
               {(score.rightIssues || score.leftIssues) && (
                 <div style={{ color: '#c53030', marginTop: 6, fontWeight: 600 }}>
-                  Possible macular pathology (AMD, macular edema). Ophthalmology referral advised.
+                  {t('results.details.amslerWarn')}
                 </div>
               )}
             </div>
           )}
           {id === 'peripheral' && (
             <div>
-              <div>Detected {score.total - score.missed} of {score.total} peripheral stimuli.</div>
-              {score.status !== 'pass' && <div style={{ color: '#c05621', marginTop: 6 }}>Peripheral field loss may indicate glaucoma. Clinical visual field testing recommended.</div>}
+              <div>{t('results.details.peripheralDetected')(score.total - score.missed, score.total)}</div>
+              {score.status !== 'pass' && <div style={{ color: '#c05621', marginTop: 6 }}>{t('results.details.peripheralWarn')}</div>}
             </div>
           )}
           {id === 'symptoms' && (
             <div>
               {score.hasUrgent?.length > 0 && (
                 <div style={{ color: '#c53030', fontWeight: 600 }}>
-                  Urgent symptoms reported: {score.hasUrgent.join(', ')}
+                  {t('results.details.symptomsUrgent')(score.hasUrgent.join(', '))}
                 </div>
               )}
               {score.hasSoon?.length > 0 && (
                 <div style={{ color: '#c05621' }}>
-                  Notable symptoms: {score.hasSoon.join(', ')}
+                  {t('results.details.symptomsSoon')(score.hasSoon.join(', '))}
                 </div>
               )}
-              {score.status === 'pass' && <div>No significant symptoms reported.</div>}
+              {score.status === 'pass' && <div>{t('results.details.symptomsNone')}</div>}
             </div>
           )}
         </div>
@@ -199,6 +164,7 @@ function TestCard({ id, score }) {
 }
 
 export default function Results({ testData, profile, language, geminiKey, onRetake }) {
+  const t = useTranslation(language);
   const [aiSummary, setAiSummary] = useState(null);
   const [loadingAI, setLoadingAI] = useState(false);
 
@@ -215,10 +181,12 @@ export default function Results({ testData, profile, language, geminiKey, onReta
 
   const validScores = Object.fromEntries(Object.entries(scores).filter(([, v]) => v !== null));
   const overallUrgency = computeOverallUrgency(validScores);
-  const localSummary = getLocalSummary(validScores, language);
+
+  // Local summary from translations
+  const localSummary = t('results.localSummary')[overallUrgency] || t('results.localSummary.routine');
 
   useEffect(() => {
-    speak('Your eye screening is complete. Here are your results.');
+    speak(t('results.voice'), language);
 
     if (geminiKey) {
       setLoadingAI(true);
@@ -228,18 +196,20 @@ export default function Results({ testData, profile, language, geminiKey, onReta
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  const urgencyLabel = t(`results.urgency.${overallUrgency}.label`) || t('results.urgency.routine.label');
+
   const handleShare = () => {
     const lines = [
-      'VisionCheck — Eye Screening Report',
+      t('results.shareHeader'),
       '─────────────────────────────────',
       ...Object.entries(scores)
         .filter(([, v]) => v)
-        .map(([k, v]) => `${TEST_LABELS[k]?.label}: ${v.status?.toUpperCase()}`),
+        .map(([k, v]) => `${t(`results.testLabels.${k}`)}: ${v.status?.toUpperCase()}`),
       '─────────────────────────────────',
-      `Overall: ${URGENCY_CONFIG[overallUrgency]?.label}`,
+      `${t('results.urgency.routine.label').split(' ')[0]}: ${urgencyLabel}`,
       '',
-      'This is a screening tool, not a medical diagnosis.',
-      'Please consult a qualified eye care provider.',
+      t('results.shareDisclaimer1'),
+      t('results.shareDisclaimer2'),
     ];
     const text = lines.join('\n');
 
@@ -247,19 +217,19 @@ export default function Results({ testData, profile, language, geminiKey, onReta
       navigator.share({ title: 'VisionCheck Results', text });
     } else {
       navigator.clipboard?.writeText(text);
-      alert('Results copied to clipboard.');
+      alert(t('results.resultsCopied'));
     }
   };
 
   const handleWhatsApp = () => {
     const lines = [
-      '*VisionCheck — Eye Screening Report*',
+      `*${t('results.shareHeader')}*`,
       Object.entries(scores)
         .filter(([, v]) => v)
-        .map(([k, v]) => `${TEST_LABELS[k]?.label}: *${v.status?.toUpperCase()}*`)
+        .map(([k, v]) => `${t(`results.testLabels.${k}`)}: *${v.status?.toUpperCase()}*`)
         .join('\n'),
-      `\nOverall: *${URGENCY_CONFIG[overallUrgency]?.label}*`,
-      '\n_Screening tool only — not a medical diagnosis._',
+      `\nOverall: *${urgencyLabel}*`,
+      `\n${t('results.whatsappDisclaimer')}`,
     ].join('\n');
     window.open(`https://wa.me/?text=${encodeURIComponent(lines)}`);
   };
@@ -269,7 +239,7 @@ export default function Results({ testData, profile, language, geminiKey, onReta
   };
 
   return (
-    <AppShell>
+    <AppShell language={language}>
       {/* Header */}
       <div style={{
         background: '#1e3a5f',
@@ -278,17 +248,17 @@ export default function Results({ testData, profile, language, geminiKey, onReta
         borderBottom: '3px solid #2c5282',
       }}>
         <div style={{ fontSize: 11, letterSpacing: 1.5, textTransform: 'uppercase', opacity: 0.6, marginBottom: 6 }}>
-          Assessment Complete
+          {t('results.assessmentComplete')}
         </div>
-        <h1 style={{ fontSize: 20, fontWeight: 700, margin: '0 0 4px' }}>Screening Report</h1>
+        <h1 style={{ fontSize: 20, fontWeight: 700, margin: '0 0 4px' }}>{t('results.screeningReport')}</h1>
         <p style={{ fontSize: 13, opacity: 0.65, margin: 0 }}>
-          {Object.values(scores).filter(Boolean).length} of 8 tests completed
+          {t('results.testsCompleted')(Object.values(scores).filter(Boolean).length)}
         </p>
       </div>
 
       <div style={{ padding: '18px 16px', overflowY: 'auto', flex: 1 }}>
         {/* Urgency banner */}
-        <UrgencyBanner urgency={overallUrgency} />
+        <UrgencyBanner urgency={overallUrgency} t={t} />
 
         {/* Summary */}
         <div style={{
@@ -299,8 +269,8 @@ export default function Results({ testData, profile, language, geminiKey, onReta
           border: '1px solid #e2e8f0',
         }}>
           <div style={{ fontWeight: 600, fontSize: 13, marginBottom: 6, color: '#2d3748', display: 'flex', alignItems: 'center', gap: 6 }}>
-            {geminiKey ? 'Clinical Summary (AI)' : 'Summary'}
-            {loadingAI && <span style={{ fontSize: 11, color: '#718096', fontWeight: 400 }}>Analyzing...</span>}
+            {geminiKey ? t('results.clinicalSummaryAI') : t('results.summary')}
+            {loadingAI && <span style={{ fontSize: 11, color: '#718096', fontWeight: 400 }}>{t('results.analyzing')}</span>}
           </div>
           <p style={{ fontSize: 13, lineHeight: 1.7, color: '#4a5568', margin: 0 }}>
             {aiSummary || localSummary}
@@ -309,10 +279,10 @@ export default function Results({ testData, profile, language, geminiKey, onReta
 
         {/* Per-test results */}
         <div style={{ fontWeight: 600, fontSize: 13, marginBottom: 10, color: '#4a5568', textTransform: 'uppercase', letterSpacing: 0.5 }}>
-          Individual Test Results
+          {t('results.individualResults')}
         </div>
         {Object.entries(scores).map(([id, score]) =>
-          score ? <TestCard key={id} id={id} score={score} /> : null
+          score ? <TestCard key={id} id={id} score={score} t={t} language={language} /> : null
         )}
 
         {/* Find Eye Clinics */}
@@ -336,27 +306,27 @@ export default function Results({ testData, profile, language, geminiKey, onReta
             letterSpacing: 0.2,
           }}
         >
-          📍 Find Eye Clinics Near You
+          {t('results.findClinics')}
         </button>
 
         {/* Share buttons */}
         <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
           <div style={{ fontWeight: 600, fontSize: 13, marginBottom: 4, color: '#4a5568', textTransform: 'uppercase', letterSpacing: 0.5 }}>
-            Share Report
+            {t('results.shareReport')}
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
             <button onClick={handleWhatsApp} style={shareBtnStyle('#25d366', '#fff')}>
-              WhatsApp
+              {t('results.whatsapp')}
             </button>
             <button onClick={handleShare} style={shareBtnStyle('#2c5282', '#fff')}>
-              Share
+              {t('results.share')}
             </button>
           </div>
         </div>
 
         {/* Disclaimer + retake */}
         <div style={{ marginTop: 18 }}>
-          <Disclaimer />
+          <Disclaimer language={language} />
           <button
             onClick={onRetake}
             style={{
@@ -373,7 +343,7 @@ export default function Results({ testData, profile, language, geminiKey, onReta
               letterSpacing: 0.2,
             }}
           >
-            Repeat Assessment
+            {t('results.repeatAssessment')}
           </button>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { AppShell, Header, BigButton } from '../components/Layout';
 import { speak } from '../utils/voice';
+import { useTranslation } from '../utils/useTranslation';
 
 const NUM_LINES = 12;
 
@@ -50,13 +51,14 @@ function RadialDial({ selectedLines, onToggle, size = 260 }) {
   );
 }
 
-export default function AstigmatismTest({ onComplete, onBack, step, totalSteps }) {
+export default function AstigmatismTest({ onComplete, onBack, step, totalSteps, language = 'en' }) {
+  const t = useTranslation(language);
   const [selectedLines, setSelectedLines] = useState([]);
   const [allSame, setAllSame] = useState(false);
 
   useEffect(() => {
-    speak('Look at the center dot. Do all the lines around it look equally dark and sharp? Tap any lines that look different, blurry, or darker than the others.');
-  }, []);
+    speak(t('astigmatism.voice'), language);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const toggleLine = (i) => {
     if (allSame) setAllSame(false);
@@ -77,14 +79,14 @@ export default function AstigmatismTest({ onComplete, onBack, step, totalSteps }
   const canSubmit = allSame || selectedLines.length > 0;
 
   return (
-    <AppShell>
+    <AppShell language={language}>
       <Header
-        title="Astigmatism Test"
-        subtitle="Radial Line Dial"
-        
+        title={t('astigmatism.title')}
+        subtitle={t('astigmatism.subtitle')}
         onBack={onBack}
         step={step}
         totalSteps={totalSteps}
+        language={language}
       />
 
       <div style={{ padding: '16px 20px', flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -99,7 +101,7 @@ export default function AstigmatismTest({ onComplete, onBack, step, totalSteps }
           textAlign: 'center',
           width: '100%',
         }}>
-          👁️ Focus on the <strong>center dot</strong>. Tap any lines that look darker, blurrier, or different from the rest.
+          {t('astigmatism.focusInstruction')}
         </div>
 
         <div style={{
@@ -113,7 +115,7 @@ export default function AstigmatismTest({ onComplete, onBack, step, totalSteps }
           textAlign: 'center',
           width: '100%',
         }}>
-          Tip: The lines are thin — tap <strong>directly on the line</strong> itself, not near it, for accurate selection.
+          {t('astigmatism.tipInstruction')}
         </div>
 
         <div style={{ marginBottom: 20, width: '100%', display: 'flex', justifyContent: 'center' }}>
@@ -136,7 +138,7 @@ export default function AstigmatismTest({ onComplete, onBack, step, totalSteps }
             width: '100%',
             textAlign: 'center',
           }}>
-            {selectedLines.length} line{selectedLines.length !== 1 ? 's' : ''} selected — tap again to deselect
+            {t('astigmatism.linesSelected')(selectedLines.length)}
           </div>
         )}
 
@@ -154,13 +156,13 @@ export default function AstigmatismTest({ onComplete, onBack, step, totalSteps }
               color: allSame ? '#15803d' : '#374151',
             }}
           >
-            {allSame ? '✓ ' : ''}All lines look the same
+            {allSame ? '✓ ' : ''}{t('astigmatism.allSame')}
           </button>
           <BigButton
             onClick={handleSubmit}
             disabled={!canSubmit}
           >
-            Next Test →
+            {t('common.nextTest')}
           </BigButton>
         </div>
       </div>
