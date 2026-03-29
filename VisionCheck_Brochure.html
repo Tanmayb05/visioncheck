@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VisionCheck — Free Eye Screening for Everyone</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;0,9..144,900;1,9..144,400&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green-deep: #0D3B28;
+    --green-rich: #1B6B4A;
+    --green-mid: #2E9B6A;
+    --green-light: #E8F5EE;
+    --green-pale: #F2FAF6;
+    --amber: #D4940A;
+    --amber-light: #FFF8E7;
+    --coral: #C4462B;
+    --coral-light: #FFF0EC;
+    --cream: #FDFBF7;
+    --warm-white: #FAF8F4;
+    --text-primary: #1A2E23;
+    --text-body: #3D5A45;
+    --text-muted: #6B8574;
+    --border: #E2DDD4;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Source Sans 3', sans-serif;
+    color: var(--text-body);
+    background: var(--cream);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* --- HERO --- */
+  .hero {
+    background: var(--green-deep);
+    color: white;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .hero-pattern {
+    position: absolute;
+    inset: 0;
+    opacity: 0.06;
+    background-image:
+      radial-gradient(circle at 20% 50%, #fff 1px, transparent 1px),
+      radial-gradient(circle at 80% 20%, #fff 1px, transparent 1px),
+      radial-gradient(circle at 60% 80%, #fff 0.5px, transparent 0.5px);
+    background-size: 60px 60px, 80px 80px, 40px 40px;
+  }
+
+  .hero-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 28px 48px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .logo-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .logo-text {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 22px;
+    letter-spacing: -0.5px;
+    color: white;
+  }
+
+  .hero-badge {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 8px 20px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: rgba(255,255,255,0.9);
+  }
+
+  .hero-content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding: 0 48px 80px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-left {
+    flex: 1.1;
+    max-width: 620px;
+  }
+
+  .hero-right {
+    flex: 0.9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .hero-eyeline {
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 20px;
+  }
+
+  .hero h1 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(40px, 5.5vw, 68px);
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: -2px;
+    color: white;
+    margin-bottom: 24px;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--amber);
+  }
+
+  .hero-desc {
+    font-size: 19px;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.75);
+    max-width: 520px;
+    font-weight: 300;
+    margin-bottom: 36px;
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 40px;
+  }
+
+  .hero-stat {
+    border-left: 2px solid var(--amber);
+    padding-left: 16px;
+  }
+
+  .hero-stat-num {
+    font-family: 'Fraunces', serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: white;
+    line-height: 1;
+  }
+
+  .hero-stat-label {
+    font-size: 13px;
+    color: rgba(255,255,255,0.55);
+    margin-top: 4px;
+    font-weight: 500;
+  }
+
+  /* Eye illustration */
+  .eye-illustration {
+    position: relative;
+    width: 380px;
+    height: 380px;
+  }
+
+  .eye-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.08);
+    animation: pulse-ring 4s ease-in-out infinite;
+  }
+
+  .eye-ring:nth-child(1) { inset: 0; animation-delay: 0s; }
+  .eye-ring:nth-child(2) { inset: 30px; animation-delay: 0.5s; }
+  .eye-ring:nth-child(3) { inset: 60px; animation-delay: 1s; }
+  .eye-ring:nth-child(4) { inset: 90px; border-color: rgba(255,255,255,0.12); animation-delay: 1.5s; }
+
+  .eye-center {
+    position: absolute;
+    inset: 110px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 40%, var(--green-mid), var(--green-deep));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 80px rgba(46,155,106,0.3);
+  }
+
+  .eye-pupil {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--green-deep);
+    position: relative;
+  }
+
+  .eye-pupil::after {
+    content: '';
+    position: absolute;
+    top: 12px;
+    left: 14px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.35);
+  }
+
+  @keyframes pulse-ring {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.04); opacity: 0.6; }
+  }
+
+  /* --- WHY SECTION --- */
+  .why-section {
+    padding: 100px 48px;
+    background: var(--cream);
+  }
+
+  .section-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--green-rich);
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.15;
+    letter-spacing: -1px;
+    max-width: 700px;
+    margin-bottom: 48px;
+  }
+
+  .why-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    max-width: 1200px;
+  }
+
+  .why-card {
+    background: white;
+    border-radius: 20px;
+    padding: 36px 32px;
+    border: 1px solid var(--border);
+    transition: transform 0.3s, box-shadow 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .why-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(13,59,40,0.08);
+  }
+
+  .why-card-accent {
+    width: 48px;
+    height: 4px;
+    border-radius: 2px;
+    margin-bottom: 24px;
+  }
+
+  .why-card-accent.green { background: var(--green-mid); }
+  .why-card-accent.amber { background: var(--amber); }
+  .why-card-accent.coral { background: var(--coral); }
+
+  .why-card h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 21px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+    line-height: 1.3;
+  }
+
+  .why-card p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--text-muted);
+  }
+
+  .why-card .big-stat {
+    font-family: 'Fraunces', serif;
+    font-size: 56px;
+    font-weight: 900;
+    color: var(--green-rich);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .why-card .big-stat.amber-text { color: var(--amber); }
+  .why-card .big-stat.coral-text { color: var(--coral); }
+
+  /* --- FEATURES --- */
+  .features-section {
+    padding: 100px 48px;
+    background: var(--green-deep);
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .features-section .section-label { color: var(--amber); }
+  .features-section .section-title { color: white; }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    max-width: 1200px;
+  }
+
+  .feature-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 28px 24px;
+    transition: background 0.3s, border-color 0.3s;
+  }
+
+  .feature-card:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: rgba(255,255,255,0.2);
+  }
+
+  .feature-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 18px;
+    font-size: 24px;
+  }
+
+  .feature-icon.green-bg { background: rgba(46,155,106,0.25); }
+  .feature-icon.amber-bg { background: rgba(212,148,10,0.25); }
+  .feature-icon.coral-bg { background: rgba(196,70,43,0.2); }
+  .feature-icon.blue-bg { background: rgba(59,139,212,0.25); }
+
+  .feature-card h4 {
+    font-family: 'Fraunces', serif;
+    font-size: 17px;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+
+  .feature-card p {
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.55);
+  }
+
+  /* --- TESTS SECTION --- */
+  .tests-section {
+    padding: 100px 48px;
+    background: var(--warm-white);
+  }
+
+  .tests-wrapper {
+    max-width: 1200px;
+  }
+
+  .tests-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  .test-card {
+    background: white;
+    border-radius: 16px;
+    padding: 28px 24px;
+    border: 1px solid var(--border);
+    text-align: center;
+    transition: transform 0.25s, box-shadow 0.25s;
+  }
+
+  .test-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(13,59,40,0.07);
+  }
+
+  .test-visual {
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 16px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    background: var(--green-pale);
+  }
+
+  .test-visual.amber-bg { background: var(--amber-light); }
+  .test-visual.coral-bg { background: var(--coral-light); }
+
+  .test-card h4 {
+    font-family: 'Fraunces', serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+  }
+
+  .test-card p {
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text-muted);
+  }
+
+  .test-tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 100px;
+    margin-top: 10px;
+    background: var(--green-light);
+    color: var(--green-rich);
+  }
+
+  .test-tag.zero { background: var(--amber-light); color: var(--amber); }
+
+  /* --- HOW IT WORKS --- */
+  .how-section {
+    padding: 100px 48px;
+    background: var(--cream);
+  }
+
+  .how-steps {
+    display: flex;
+    gap: 0;
+    max-width: 1200px;
+    position: relative;
+  }
+
+  .how-steps::before {
+    content: '';
+    position: absolute;
+    top: 44px;
+    left: 80px;
+    right: 80px;
+    height: 2px;
+    background: repeating-linear-gradient(90deg, var(--green-mid) 0, var(--green-mid) 8px, transparent 8px, transparent 16px);
+    opacity: 0.3;
+  }
+
+  .how-step {
+    flex: 1;
+    text-align: center;
+    position: relative;
+    padding: 0 12px;
+  }
+
+  .step-number {
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    background: var(--green-deep);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-family: 'Fraunces', serif;
+    font-size: 32px;
+    font-weight: 700;
+    position: relative;
+    z-index: 2;
+    box-shadow: 0 8px 32px rgba(13,59,40,0.15);
+  }
+
+  .how-step h4 {
+    font-family: 'Fraunces', serif;
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+
+  .how-step p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-muted);
+    max-width: 220px;
+    margin: 0 auto;
+  }
+
+  /* --- AUDIENCE / FOR WHO --- */
+  .audience-section {
+    padding: 100px 48px;
+    background: white;
+  }
+
+  .audience-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    max-width: 1200px;
+  }
+
+  .audience-card {
+    padding: 36px 32px;
+    border-radius: 20px;
+    border: 2px solid var(--border);
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+
+  .audience-card:hover { border-color: var(--green-mid); }
+
+  .audience-card .audience-emoji {
+    font-size: 40px;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .audience-card h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+  }
+
+  .audience-card p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--text-muted);
+  }
+
+  /* --- IMPACT BANNER --- */
+  .impact-banner {
+    padding: 80px 48px;
+    background: linear-gradient(135deg, var(--green-rich) 0%, var(--green-deep) 100%);
+    color: white;
+    text-align: center;
+  }
+
+  .impact-banner .section-label { color: var(--amber); }
+
+  .impact-banner h2 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(28px, 3.5vw, 44px);
+    font-weight: 700;
+    color: white;
+    max-width: 750px;
+    margin: 0 auto 48px;
+    line-height: 1.2;
+    letter-spacing: -0.5px;
+  }
+
+  .impact-stats {
+    display: flex;
+    justify-content: center;
+    gap: 64px;
+    flex-wrap: wrap;
+  }
+
+  .impact-stat {
+    text-align: center;
+  }
+
+  .impact-stat-num {
+    font-family: 'Fraunces', serif;
+    font-size: 52px;
+    font-weight: 900;
+    color: var(--amber);
+    line-height: 1;
+  }
+
+  .impact-stat-label {
+    font-size: 14px;
+    color: rgba(255,255,255,0.65);
+    margin-top: 6px;
+    font-weight: 500;
+  }
+
+  /* --- TECH STACK --- */
+  .tech-section {
+    padding: 80px 48px;
+    background: var(--warm-white);
+    text-align: center;
+  }
+
+  .tech-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    max-width: 800px;
+    margin: 32px auto 0;
+  }
+
+  .tech-pill {
+    background: white;
+    border: 1px solid var(--border);
+    padding: 10px 22px;
+    border-radius: 100px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .tech-pill .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  .tech-pill .dot.green { background: var(--green-mid); }
+  .tech-pill .dot.amber { background: var(--amber); }
+  .tech-pill .dot.coral { background: var(--coral); }
+  .tech-pill .dot.blue { background: #3B8BD4; }
+
+  /* --- FOOTER --- */
+  .footer {
+    padding: 48px;
+    background: var(--green-deep);
+    color: rgba(255,255,255,0.5);
+    text-align: center;
+    font-size: 14px;
+  }
+
+  .footer-logo {
+    font-family: 'Fraunces', serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 8px;
+  }
+
+  .footer p { margin-top: 6px; }
+  .footer .amber-link { color: var(--amber); }
+
+  /* --- ANIMATIONS --- */
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-in {
+    opacity: 0;
+    animation: fade-up 0.7s ease forwards;
+  }
+
+  .delay-1 { animation-delay: 0.1s; }
+  .delay-2 { animation-delay: 0.2s; }
+  .delay-3 { animation-delay: 0.3s; }
+  .delay-4 { animation-delay: 0.4s; }
+  .delay-5 { animation-delay: 0.5s; }
+  .delay-6 { animation-delay: 0.6s; }
+  .delay-7 { animation-delay: 0.7s; }
+  .delay-8 { animation-delay: 0.8s; }
+
+  /* --- RESPONSIVE --- */
+  @media (max-width: 1024px) {
+    .features-grid { grid-template-columns: repeat(2, 1fr); }
+    .tests-grid { grid-template-columns: repeat(2, 1fr); }
+    .hero-content { flex-direction: column; gap: 48px; padding: 40px 48px 60px; }
+    .hero-right { display: none; }
+    .hero-left { max-width: 100%; }
+  }
+
+  @media (max-width: 768px) {
+    .hero-top, .why-section, .features-section, .tests-section, .how-section, .audience-section, .impact-banner, .tech-section, .footer { padding-left: 24px; padding-right: 24px; }
+    .why-grid, .audience-grid { grid-template-columns: 1fr; }
+    .features-grid, .tests-grid { grid-template-columns: 1fr; }
+    .how-steps { flex-direction: column; gap: 32px; }
+    .how-steps::before { display: none; }
+    .hero-stats { flex-direction: column; gap: 20px; }
+    .impact-stats { flex-direction: column; gap: 32px; }
+    .hero-badge { display: none; }
+  }
+
+  @media print {
+    .hero { min-height: auto; padding-bottom: 60px; }
+    .eye-illustration { display: none; }
+    .hero-content { padding-bottom: 40px; }
+    .animate-in { opacity: 1 !important; animation: none !important; }
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ==================== HERO ==================== -->
+<section class="hero">
+  <div class="hero-pattern"></div>
+  <div class="hero-top">
+    <div class="logo">
+      <svg class="logo-icon" viewBox="0 0 40 40" fill="none">
+        <ellipse cx="20" cy="20" rx="18" ry="11" stroke="white" stroke-width="1.5" fill="none"/>
+        <circle cx="20" cy="20" r="7" fill="#2E9B6A"/>
+        <circle cx="20" cy="20" r="3.5" fill="white" opacity="0.9"/>
+        <circle cx="18" cy="18.5" r="1.2" fill="white" opacity="0.5"/>
+      </svg>
+      <span class="logo-text">VisionCheck</span>
+    </div>
+    <div class="hero-badge">RevolutionUC 2026</div>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-left">
+      <div class="hero-eyeline animate-in delay-1">Screening Tool for Africa</div>
+      <h1 class="animate-in delay-2">A free eye test<br>in <em>everyone's</em><br>pocket</h1>
+      <p class="hero-desc animate-in delay-3">A smartphone-based eye screening app designed for people in African countries who can't access or afford professional eye care. No hardware. No literacy required. No internet needed.</p>
+      <div class="hero-stats animate-in delay-4">
+        <div class="hero-stat">
+          <div class="hero-stat-num">1.1B</div>
+          <div class="hero-stat-label">People with preventable<br>vision impairment</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">1 in 20</div>
+          <div class="hero-stat-label">Glaucoma patients in Africa<br>know they have it</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">50%</div>
+          <div class="hero-stat-label">Of African blindness<br>is from cataracts alone</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-right animate-in delay-5">
+      <div class="eye-illustration">
+        <div class="eye-ring"></div>
+        <div class="eye-ring"></div>
+        <div class="eye-ring"></div>
+        <div class="eye-ring"></div>
+        <div class="eye-center">
+          <div class="eye-pupil"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== WHY THIS IDEA ==================== -->
+<section class="why-section">
+  <div class="section-label animate-in">Why this matters</div>
+  <h2 class="section-title animate-in delay-1">The world's biggest treatable health crisis<br>that nobody talks about</h2>
+
+  <div class="why-grid">
+    <div class="why-card animate-in delay-2">
+      <div class="why-card-accent green"></div>
+      <div class="big-stat">2/3</div>
+      <h3>Can't get glasses</h3>
+      <p>Two out of three people in low-income countries who need eyeglasses don't have access to them. Not because glasses are complex — but because they've never been screened.</p>
+    </div>
+    <div class="why-card animate-in delay-3">
+      <div class="why-card-accent amber"></div>
+      <div class="big-stat amber-text">5%</div>
+      <h3>Children screened</h3>
+      <p>In Francophone Africa, only about 5% of second-graders have ever taken a vision test. Children with impaired vision are 5-7% less likely to complete school or become literate.</p>
+    </div>
+    <div class="why-card animate-in delay-4">
+      <div class="why-card-accent coral"></div>
+      <div class="big-stat coral-text">1:1M</div>
+      <h3>Doctor ratio</h3>
+      <p>Sub-Saharan Africa has roughly 1 ophthalmologist per million people. Hospitals are far away, expensive, and often in cities — while 60% of the population lives rurally.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== FEATURES ==================== -->
+<section class="features-section">
+  <div class="section-label">What makes it different</div>
+  <h2 class="section-title">Built for people who've<br>never had an eye test</h2>
+
+  <div class="features-grid">
+    <div class="feature-card animate-in delay-1">
+      <div class="feature-icon green-bg">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" fill="white"/></svg>
+      </div>
+      <h4>8 screening tests</h4>
+      <p>Acuity, color vision, astigmatism, contrast, near vision, macular health, peripheral vision, and symptom-based risk assessment — all from one phone.</p>
+    </div>
+
+    <div class="feature-card animate-in delay-2">
+      <div class="feature-icon amber-bg">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 15c1.66 0 3-1.34 3-3V6c0-1.66-1.34-3-3-3S9 4.34 9 6v6c0 1.66 1.34 3 3 3zm5-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-2.08c3.39-.49 6-3.39 6-6.92h-2z" fill="white"/></svg>
+      </div>
+      <h4>Voice-guided in local languages</h4>
+      <p>ElevenLabs AI narrates every instruction in English, French, Swahili, and Amharic. Critical for low-literacy users — voice is the primary interaction mode.</p>
+    </div>
+
+    <div class="feature-card animate-in delay-3">
+      <div class="feature-icon coral-bg">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M17 1H7c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-2-2-2zm0 18H7V5h10v14zM12 17.5c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5-1.5.67-1.5 1.5.67 1.5 1.5 1.5z" fill="white"/></svg>
+      </div>
+      <h4>Zero hardware needed</h4>
+      <p>Works on any smartphone — even entry-level $30 Android Go devices. No attachments, no internet after first load, no special equipment of any kind.</p>
+    </div>
+
+    <div class="feature-card animate-in delay-4">
+      <div class="feature-icon blue-bg">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z" fill="white"/></svg>
+      </div>
+      <h4>Zero literacy required</h4>
+      <p>Tumbling E test (swipe direction), icon-driven symptom checker, and tap-based inputs. The entire app works without reading a single word.</p>
+    </div>
+
+    <div class="feature-card animate-in delay-5">
+      <div class="feature-icon green-bg">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill="white"/></svg>
+      </div>
+      <h4>AI-powered analysis</h4>
+      <p>Google Gemini API analyzes all test results together, generates a plain-language health summary in the user's language, and classifies referral urgency.</p>
+    </div>
+
+    <div class="feature-card animate-in delay-6">
+      <div class="feature-icon amber-bg">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" fill="white"/></svg>
+      </div>
+      <h4>Children's mode</h4>
+      <p>LEA symbol tests (house, circle, square, apple) for kids and non-readers. Designed for teachers to screen an entire classroom quickly.</p>
+    </div>
+
+    <div class="feature-card animate-in delay-7">
+      <div class="feature-icon coral-bg">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z" fill="white"/></svg>
+      </div>
+      <h4>Share anywhere</h4>
+      <p>Results shareable via WhatsApp, SMS, or downloadable PDF. A health worker can receive results even from a patient with a basic feature phone.</p>
+    </div>
+
+    <div class="feature-card animate-in delay-8">
+      <div class="feature-icon blue-bg">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4V4c0-1.1-.9-2-2-2zm-7 12h-2v-2h2v2zm0-4h-2V6h2v4z" fill="white"/></svg>
+      </div>
+      <h4>Smart symptom screener</h4>
+      <p>Icon-based questionnaire flags conditions that can't be tested on-screen — cataracts, glaucoma risk, trachoma signs, diabetic retinopathy indicators.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 8 TESTS ==================== -->
+<section class="tests-section">
+  <div class="tests-wrapper">
+    <div class="section-label">The screening suite</div>
+    <h2 class="section-title">8 clinically validated tests,<br>one phone, zero cost</h2>
+
+    <div class="tests-grid">
+      <div class="test-card animate-in delay-1">
+        <div class="test-visual">
+          <svg width="36" height="36" viewBox="0 0 36 36"><text x="4" y="28" font-family="monospace" font-size="32" font-weight="bold" fill="#1B6B4A">E</text></svg>
+        </div>
+        <h4>Visual acuity</h4>
+        <p>Tumbling E — swipe which direction the E faces. Tests each eye separately.</p>
+        <span class="test-tag zero">Zero literacy</span>
+      </div>
+
+      <div class="test-card animate-in delay-2">
+        <div class="test-visual">
+          <svg width="36" height="36" viewBox="0 0 36 36"><circle cx="18" cy="18" r="14" fill="none" stroke="#1B6B4A" stroke-width="2"/><circle cx="12" cy="14" r="4" fill="#C4462B" opacity="0.7"/><circle cx="22" cy="12" r="3" fill="#2E9B6A" opacity="0.7"/><circle cx="16" cy="22" r="5" fill="#D4940A" opacity="0.6"/><circle cx="25" cy="21" r="3.5" fill="#C4462B" opacity="0.6"/></svg>
+        </div>
+        <h4>Color vision</h4>
+        <p>Ishihara-style dot plates detect red-green and blue-yellow deficiency.</p>
+        <span class="test-tag">Numbers only</span>
+      </div>
+
+      <div class="test-card animate-in delay-3">
+        <div class="test-visual">
+          <svg width="36" height="36" viewBox="0 0 36 36"><line x1="18" y1="4" x2="18" y2="32" stroke="#1B6B4A" stroke-width="1.5"/><line x1="4" y1="18" x2="32" y2="18" stroke="#1B6B4A" stroke-width="1.5"/><line x1="8" y1="8" x2="28" y2="28" stroke="#1B6B4A" stroke-width="1.5"/><line x1="28" y1="8" x2="8" y2="28" stroke="#1B6B4A" stroke-width="1.5"/><circle cx="18" cy="18" r="2.5" fill="#1B6B4A"/></svg>
+        </div>
+        <h4>Astigmatism</h4>
+        <p>Radial line dial — tap any lines that look darker or blurrier than the rest.</p>
+        <span class="test-tag zero">Zero literacy</span>
+      </div>
+
+      <div class="test-card animate-in delay-4">
+        <div class="test-visual">
+          <svg width="36" height="36" viewBox="0 0 36 36"><circle cx="18" cy="18" r="12" fill="none" stroke="#1B6B4A" stroke-width="3" opacity="0.3"/><rect x="24" y="14" width="8" height="8" fill="#F2FAF6"/></svg>
+        </div>
+        <h4>Contrast</h4>
+        <p>Landolt C at fading contrast levels. Catches early cataracts and glaucoma signs.</p>
+        <span class="test-tag zero">Zero literacy</span>
+      </div>
+
+      <div class="test-card animate-in delay-5">
+        <div class="test-visual amber-bg">
+          <svg width="36" height="36" viewBox="0 0 36 36"><text x="4" y="14" font-family="serif" font-size="14" fill="#D4940A">Aa</text><text x="6" y="26" font-family="serif" font-size="10" fill="#D4940A" opacity="0.5">Bb</text><text x="8" y="34" font-family="serif" font-size="7" fill="#D4940A" opacity="0.3">Cc</text></svg>
+        </div>
+        <h4>Near vision</h4>
+        <p>Calibrated reading chart for presbyopia — near-universal in adults over 40.</p>
+        <span class="test-tag">Minimal</span>
+      </div>
+
+      <div class="test-card animate-in delay-6">
+        <div class="test-visual amber-bg">
+          <svg width="36" height="36" viewBox="0 0 36 36"><rect x="4" y="4" width="28" height="28" fill="none" stroke="#D4940A" stroke-width="1"/><line x1="4" y1="11" x2="32" y2="11" stroke="#D4940A" stroke-width="0.5"/><line x1="4" y1="18" x2="32" y2="18" stroke="#D4940A" stroke-width="0.5"/><line x1="4" y1="25" x2="32" y2="25" stroke="#D4940A" stroke-width="0.5"/><line x1="11" y1="4" x2="11" y2="32" stroke="#D4940A" stroke-width="0.5"/><line x1="18" y1="4" x2="18" y2="32" stroke="#D4940A" stroke-width="0.5"/><line x1="25" y1="4" x2="25" y2="32" stroke="#D4940A" stroke-width="0.5"/><circle cx="18" cy="18" r="2" fill="#D4940A"/></svg>
+        </div>
+        <h4>Amsler grid</h4>
+        <p>Detects macular degeneration, macular edema, and central vision distortions early.</p>
+        <span class="test-tag zero">Zero literacy</span>
+      </div>
+
+      <div class="test-card animate-in delay-7">
+        <div class="test-visual coral-bg">
+          <svg width="36" height="36" viewBox="0 0 36 36"><circle cx="18" cy="18" r="14" fill="none" stroke="#C4462B" stroke-width="1" stroke-dasharray="2 4"/><circle cx="18" cy="18" r="3" fill="#C4462B"/><circle cx="6" cy="12" r="2.5" fill="#C4462B" opacity="0.3"/><circle cx="30" cy="24" r="2.5" fill="#C4462B" opacity="0.3"/></svg>
+        </div>
+        <h4>Peripheral vision</h4>
+        <p>Dot detection while fixating centrally. Catches visual field loss from advanced glaucoma.</p>
+        <span class="test-tag zero">Zero literacy</span>
+      </div>
+
+      <div class="test-card animate-in delay-8">
+        <div class="test-visual coral-bg">
+          <svg width="36" height="36" viewBox="0 0 36 36"><rect x="6" y="8" width="24" height="20" rx="3" fill="none" stroke="#C4462B" stroke-width="1.5"/><line x1="12" y1="15" x2="24" y2="15" stroke="#C4462B" stroke-width="1" opacity="0.4"/><line x1="12" y1="19" x2="20" y2="19" stroke="#C4462B" stroke-width="1" opacity="0.4"/><line x1="12" y1="23" x2="22" y2="23" stroke="#C4462B" stroke-width="1" opacity="0.4"/><circle cx="27" cy="11" r="5" fill="#C4462B" opacity="0.15"/><text x="25" y="14" font-size="8" fill="#C4462B" font-weight="bold">!</text></svg>
+        </div>
+        <h4>Symptom screener</h4>
+        <p>Icon-based questionnaire flags cataracts, glaucoma, trachoma, and diabetic retinopathy risk.</p>
+        <span class="test-tag zero">Zero literacy</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== HOW IT WORKS ==================== -->
+<section class="how-section">
+  <div class="section-label">How it works</div>
+  <h2 class="section-title">From screening to care<br>in four steps</h2>
+
+  <div class="how-steps">
+    <div class="how-step animate-in delay-1">
+      <div class="step-number">1</div>
+      <h4>Open & choose language</h4>
+      <p>No download needed. Select your language — voice guidance begins immediately.</p>
+    </div>
+    <div class="how-step animate-in delay-2">
+      <div class="step-number">2</div>
+      <h4>Complete 8 tests</h4>
+      <p>Voice-guided, tap-and-swipe tests take about 10 minutes. Works offline.</p>
+    </div>
+    <div class="how-step animate-in delay-3">
+      <div class="step-number">3</div>
+      <h4>Get AI results</h4>
+      <p>Gemini AI analyzes everything and gives a clear, plain-language health summary with urgency flags.</p>
+    </div>
+    <div class="how-step animate-in delay-4">
+      <div class="step-number">4</div>
+      <h4>Share & get care</h4>
+      <p>Send results via WhatsApp or SMS to a health worker. Download a PDF report.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== WHO IT'S FOR ==================== -->
+<section class="audience-section">
+  <div class="section-label">Who it's for</div>
+  <h2 class="section-title">Designed for three audiences</h2>
+
+  <div class="audience-grid">
+    <div class="audience-card animate-in delay-1">
+      <span class="audience-emoji">👨‍👩‍👧‍👦</span>
+      <h3>Families in rural communities</h3>
+      <p>Adults who've never been screened. Children falling behind in school without knowing why. Elders with worsening vision who think it's "just aging." Anyone with a shared smartphone can run a complete screening for their whole family.</p>
+    </div>
+    <div class="audience-card animate-in delay-2">
+      <span class="audience-emoji">🏥</span>
+      <h3>Community health workers</h3>
+      <p>CHWs and teachers who conduct screenings in villages and schools. Batch mode lets them screen 30 students in a session and generate one referral report. Research shows trained teachers significantly increase screening rates.</p>
+    </div>
+    <div class="audience-card animate-in delay-3">
+      <span class="audience-emoji">🌍</span>
+      <h3>NGOs & health ministries</h3>
+      <p>Organizations like Sightsavers, Orbis, and WHO AFRO need screening data to plan resources. VisionCheck provides anonymized, population-level vision data for evidence-based eye care program deployment.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== IMPACT STATS ==================== -->
+<section class="impact-banner">
+  <div class="section-label">The opportunity</div>
+  <h2>Smartphone adoption in Africa will hit 87% by 2030.<br>The eye clinic can go wherever the phone goes.</h2>
+
+  <div class="impact-stats">
+    <div class="impact-stat animate-in delay-1">
+      <div class="impact-stat-num">8</div>
+      <div class="impact-stat-label">Screening tests<br>in one app</div>
+    </div>
+    <div class="impact-stat animate-in delay-2">
+      <div class="impact-stat-num">4+</div>
+      <div class="impact-stat-label">African languages<br>with voice guidance</div>
+    </div>
+    <div class="impact-stat animate-in delay-3">
+      <div class="impact-stat-num">$0</div>
+      <div class="impact-stat-label">Cost to the user<br>forever</div>
+    </div>
+    <div class="impact-stat animate-in delay-4">
+      <div class="impact-stat-num">0 MB</div>
+      <div class="impact-stat-label">Data needed<br>after first load</div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== TECH STACK ==================== -->
+<section class="tech-section">
+  <div class="section-label">Built with</div>
+  <h2 class="section-title" style="margin: 0 auto;">Powered by modern, accessible technology</h2>
+
+  <div class="tech-pills">
+    <div class="tech-pill"><span class="dot green"></span>React PWA</div>
+    <div class="tech-pill"><span class="dot amber"></span>Google Gemini API</div>
+    <div class="tech-pill"><span class="dot coral"></span>ElevenLabs TTS</div>
+    <div class="tech-pill"><span class="dot blue"></span>Vercel CDN</div>
+    <div class="tech-pill"><span class="dot green"></span>jsPDF reports</div>
+    <div class="tech-pill"><span class="dot amber"></span>Service Workers</div>
+    <div class="tech-pill"><span class="dot blue"></span>WhatsApp API</div>
+    <div class="tech-pill"><span class="dot coral"></span>Offline-first</div>
+  </div>
+</section>
+
+<!-- ==================== FOOTER ==================== -->
+<footer class="footer">
+  <div class="footer-logo">VisionCheck</div>
+  <p>Built with purpose at <span class="amber-link">RevolutionUC 2026</span></p>
+  <p style="margin-top:12px; opacity:0.6;">Because everyone deserves to see clearly.</p>
+</footer>
+
+<script>
+  // Intersection Observer for scroll animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.animationPlayState = 'running';
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.animate-in').forEach(el => {
+    // Pause animations that aren't in the hero
+    if (!el.closest('.hero')) {
+      el.style.animationPlayState = 'paused';
+    }
+    observer.observe(el);
+  });
+</script>
+
+</body>
+</html>
